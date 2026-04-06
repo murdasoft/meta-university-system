@@ -2,25 +2,26 @@ import os
 import sys
 from django.core.wsgi import get_wsgi_application
 
-# Robust path handling for Vercel functions
-# current_dir is /var/task/api
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# root_dir is /var/task
-root_dir = os.path.dirname(current_dir)
-# project_dir is /var/task/django_project/danadjango
-project_dir = os.path.join(root_dir, "django_project", "danadjango")
+# Add project root to sys.path
+# This script is at /api/index.py, root is /
+current_directory = os.path.dirname(os.path.abspath(__file__))
+project_directory = os.path.join(os.path.dirname(current_directory), "django_project", "danadjango")
 
-# Inject paths into sys.path
-if project_dir not in sys.path:
-    sys.path.insert(0, project_dir)
+if project_directory not in sys.path:
+    sys.path.insert(0, project_directory)
 
 # Set settings module
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "danadjango.settings")
 
-# Try to get application
+# Expose 'app' for Vercel
 try:
-    application = get_wsgi_application()
-    app = application
+    app = get_wsgi_application()
 except Exception as e:
-    print(f"Error loading WSGI application: {e}")
-    raise
+    # Fallback to a simple error reporter if Django fails to load
+    print(f"CRITICAL: Failed to load Django application: {e}")
+    def app(environ, start_response):
+        status = '500 Internal Server Error'
+        output = f"Django initialization failed: {e}".encode()
+        response_headers = [('Content-type', 'text/plain'), ('Content-Length', str(len(output)))]
+        start_response(status, response_headers)
+        return [output]
