@@ -18,3 +18,4 @@ django-filter==23.5
 # Google Vision API (optional, for better OCR)
 # google-cloud-vision==3.4.4
 # google-auth==2.23.4
+whitenoise==6.6.0

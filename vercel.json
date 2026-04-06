@@ -8,20 +8,9 @@
         "maxLambdaSize": "15mb",
         "runtime": "python3.10"
       }
-    },
-    {
-      "src": "build_vercel.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "django_project/danadjango/staticfiles"
-      }
     }
   ],
   "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "django_project/danadjango/staticfiles/$1"
-    },
     {
       "src": "/(.*)",
       "dest": "django_project/danadjango/danadjango/wsgi.py"
