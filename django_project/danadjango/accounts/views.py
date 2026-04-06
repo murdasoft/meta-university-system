@@ -38,7 +38,17 @@ def custom_login(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            login(request, user)
+            # Vercel Read-Only Database Fix:
+            # Django's login() automatically triggers update_last_login which calls user.save().
+            # We mock user.save temporarily to prevent any write attempts to the read-only SQLite DB.
+            original_save = user.save
+            user.save = lambda *args, **kwargs: None
+            
+            try:
+                login(request, user)
+            finally:
+                user.save = original_save
+                
             messages.success(request, f'Добро пожаловать, {user.username}!')
             next_url = request.POST.get('next') or 'dashboard_index'
             return redirect(next_url)
