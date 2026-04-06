@@ -1,0 +1,17 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Соискатель — дашборд{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/seeker_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Личный кабинет соискателя</h1>
+    <p class="mock-page-lead">{% if mock_user %}Здравствуйте, <strong>{{ mock_user.display }}</strong>. {% endif %}Краткая статистика (макетные числа).</p>
+    <div class="mock-stats">
+      <div class="mock-stat"><div class="mock-stat__val">12</div><div class="mock-stat__label">Откликов</div></div>
+      <div class="mock-stat"><div class="mock-stat__val">48</div><div class="mock-stat__label">Просмотров профиля</div></div>
+      <div class="mock-stat"><div class="mock-stat__val">5</div><div class="mock-stat__label">Сохранённых вакансий</div></div>
+    </div>
+    <p class="mock-hint">Обратная связь в макете: после действий здесь появились бы уведомления и обновлённые счётчики.</p>
+  </div>
+</div>
+{% endblock %}

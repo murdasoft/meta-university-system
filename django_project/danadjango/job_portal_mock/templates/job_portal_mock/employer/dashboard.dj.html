@@ -1,0 +1,17 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Работодатель — дашборд{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/employer_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Личный кабинет работодателя</h1>
+    <p class="mock-page-lead">{% if mock_user %}Компания: <strong>{{ mock_user.display }}</strong>. {% endif %}Сводка по активным вакансиям и откликам.</p>
+    <div class="mock-stats">
+      <div class="mock-stat"><div class="mock-stat__val">7</div><div class="mock-stat__label">Активных вакансий</div></div>
+      <div class="mock-stat"><div class="mock-stat__val">23</div><div class="mock-stat__label">Новых откликов</div></div>
+      <div class="mock-stat"><div class="mock-stat__val">4</div><div class="mock-stat__label">Собеседований на неделе</div></div>
+    </div>
+    <p class="mock-hint">Единый стиль с кабинетом соискателя — консистентность интерфейса.</p>
+  </div>
+</div>
+{% endblock %}

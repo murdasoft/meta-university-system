@@ -1,0 +1,23 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Отклики на вакансии{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/employer_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Отклики на вакансии</h1>
+    <p class="mock-page-lead">Просмотр кандидатов и смена статусов отклика.</p>
+    <div class="mock-table-wrap">
+      <table class="mock-table">
+        <thead>
+          <tr><th>Кандидат</th><th>Вакансия</th><th>Стадия</th><th>Действие</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>А. Касымов</td><td>Senior Python</td><td><span class="mock-badge">новый</span></td><td><span class="mock-btn">Открыть</span></td></tr>
+          <tr><td>М. Омарова</td><td>Senior Python</td><td><span class="mock-badge">интервью</span></td><td><span class="mock-btn">Открыть</span></td></tr>
+          <tr><td>Е. Нурлан</td><td>HR-менеджер</td><td><span class="mock-badge mock-badge--neutral">отклонён</span></td><td><span class="mock-btn">Открыть</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+<aside class="mock-side-nav" aria-label="Админ-панель макет">
+  <a href="{% url 'job_portal_mock:admin_users' %}" class="{% if active == 'adm_users' %}is-active{% endif %}">Пользователи</a>
+  <a href="{% url 'job_portal_mock:admin_moderation' %}" class="{% if active == 'adm_mod' %}is-active{% endif %}">Модерация</a>
+  <a href="{% url 'job_portal_mock:admin_directories' %}" class="{% if active == 'adm_dir' %}is-active{% endif %}">Справочники</a>
+  <a href="{% url 'job_portal_mock:admin_reports' %}" class="{% if active == 'adm_rep' %}is-active{% endif %}">Статистика и отчёты</a>
+  <a href="{% url 'job_portal_mock:admin_system' %}" class="{% if active == 'adm_sys' %}is-active{% endif %}">Настройки системы</a>
+</aside>

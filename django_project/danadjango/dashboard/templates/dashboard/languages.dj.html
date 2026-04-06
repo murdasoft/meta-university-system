@@ -1,0 +1,228 @@
+{% extends 'base.dj.html' %}
+
+{% block title %}Языки - Qazaq Dana{% endblock %}
+
+{% block page_title %}Управление языками{% endblock %}
+{% block breadcrumb %}Языки{% endblock %}
+
+{% block extra_css %}
+<style>
+    .languages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .language-card {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .language-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(52, 152, 219, 0.05) 0%, transparent 70%);
+        animation: pulse-lang 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-lang {
+        0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
+        50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+    }
+
+    .language-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+
+    .language-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .language-flag {
+        font-size: 48px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .language-info h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .language-code {
+        display: inline-block;
+        padding: 4px 10px;
+        background: rgba(52, 152, 219, 0.1);
+        color: var(--primary);
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .language-stats {
+        position: relative;
+        z-index: 1;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid var(--light);
+    }
+
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .stat-label {
+        color: var(--text-light);
+        font-size: 14px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .language-active {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 15px;
+    }
+
+    .language-inactive {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger);
+    }
+
+    .add-language-card {
+        background: linear-gradient(135deg, var(--primary-light), var(--primary-lighter));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        border: 3px dashed rgba(255,255,255,0.5);
+    }
+
+    .add-language-card:hover {
+        border-style: solid;
+        transform: scale(1.05);
+    }
+
+    .add-language-card i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .add-language-card h3 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .languages-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="languages-grid">
+    {% for language in languages %}
+    <div class="language-card">
+        <div class="language-header">
+            <div class="language-flag">
+                {% if language.code == 'ru' %}🇷🇺
+                {% elif language.code == 'kk' %}🇰🇿
+                {% elif language.code == 'en' %}🇬🇧
+                {% else %}🌐{% endif %}
+            </div>
+            <div class="language-info">
+                <h3>{{ language.name }}</h3>
+                <span class="language-code">{{ language.code }}</span>
+            </div>
+        </div>
+        
+        <div class="language-stats">
+            <div class="stat-row">
+                <span class="stat-label">📊 Всего запросов:</span>
+                <span class="stat-value">{{ language.requests_count }}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">📅 Добавлен:</span>
+                <span class="stat-value" style="font-size: 14px;">{{ language.created_at|date:"d.m.Y" }}</span>
+            </div>
+        </div>
+        
+        <div class="language-active {% if not language.is_active %}language-inactive{% endif %}">
+            <i class="fas fa-{% if language.is_active %}check-circle{% else %}times-circle{% endif %}"></i>
+            {% if language.is_active %}Активен{% else %}Неактивен{% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="language-card">
+        <div style="text-align: center; padding: 20px;">
+            <i class="fas fa-language" style="font-size: 48px; color: var(--text-light); opacity: 0.3; margin-bottom: 15px;"></i>
+            <p style="color: var(--text-light);">Нет языков в системе</p>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <div class="language-card add-language-card" onclick="addLanguage()">
+        <i class="fas fa-plus-circle"></i>
+        <h3>Добавить язык</h3>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function addLanguage() {
+        alert('Функция добавления нового языка в разработке');
+        // Здесь можно добавить модальное окно для добавления языка
+    }
+</script>
+{% endblock %}

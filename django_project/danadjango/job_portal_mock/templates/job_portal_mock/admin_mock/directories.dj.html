@@ -1,0 +1,29 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Админ — справочники{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/admin_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Справочники</h1>
+    <p class="mock-page-lead">Отрасли, навыки, регионы, типы занятости.</p>
+    <div class="mock-categories" style="margin-bottom:1rem;">
+      <span class="mock-chip">Отрасли (124)</span>
+      <span class="mock-chip">Навыки (890)</span>
+      <span class="mock-chip">Регионы (20)</span>
+      <span class="mock-chip">Типы графика</span>
+    </div>
+    <div class="mock-table-wrap">
+      <table class="mock-table">
+        <thead>
+          <tr><th>Код</th><th>Название</th><th>Использований</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>it_dev</td><td>Разработка ПО</td><td>1 240</td></tr>
+          <tr><td>sales</td><td>Продажи</td><td>980</td></tr>
+          <tr><td>edu</td><td>Образование</td><td>410</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

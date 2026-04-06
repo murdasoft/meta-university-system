@@ -1,0 +1,30 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Админ — настройки системы{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/admin_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Настройки системы</h1>
+    <p class="mock-page-lead">Параметры платформы, интеграции, лимиты (макет).</p>
+    <form class="mock-form" style="max-width:480px" action="#" onsubmit="return false;">
+      <div>
+        <label for="t1">Название платформы</label>
+        <input id="t1" type="text" value="Портал вакансий (демо)" readonly>
+      </div>
+      <div>
+        <label for="t2">Email уведомлений (системный)</label>
+        <input id="t2" type="email" value="noreply@example.kz" readonly>
+      </div>
+      <div>
+        <label for="t3">Макс. активных вакансий на компанию</label>
+        <input id="t3" type="number" value="25" readonly>
+      </div>
+      <div>
+        <label for="t4">Техническое сообщение для пользователей</label>
+        <textarea id="t4" readonly>Плановые работы: воскресенье 02:00–04:00</textarea>
+      </div>
+      <span class="mock-btn mock-btn--primary">Сохранить настройки</span>
+    </form>
+  </div>
+</div>
+{% endblock %}

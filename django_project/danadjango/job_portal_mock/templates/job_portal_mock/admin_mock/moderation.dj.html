@@ -1,0 +1,22 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Админ — модерация{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/admin_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Модерация вакансий и резюме</h1>
+    <p class="mock-page-lead">Очередь на проверку, одобрение и отклонение с причиной.</p>
+    <div class="mock-list-cards">
+      <div class="mock-card">
+        <p class="mock-card__title">Вакансия «Торговый представитель»</p>
+        <p class="mock-card__text">Жалоба: вводящее в заблуждение описание зарплаты · <span class="mock-badge">на проверке</span></p>
+      </div>
+      <div class="mock-card">
+        <p class="mock-card__title">Резюме кандидата #8821</p>
+        <p class="mock-card__text">Подозрение на недостоверный опыт · <span class="mock-badge">на проверке</span></p>
+      </div>
+    </div>
+    <p class="mock-hint">В продукте здесь были бы кнопки «Одобрить» / «Отклонить» с обязательной обратной связью.</p>
+  </div>
+</div>
+{% endblock %}

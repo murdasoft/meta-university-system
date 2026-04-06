@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ portal_title }} — META University</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg0: #0a1018;
+            --bg1: #121c28;
+            --accent: #4ecdc4;
+            --accent2: #ff6b6b;
+            --text: #eef4f8;
+            --muted: #8b9aaf;
+            --card: rgba(18, 32, 48, 0.82);
+            --border: rgba(78, 205, 196, 0.22);
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "DM Sans", system-ui, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(165deg, var(--bg0), var(--bg1));
+            color: var(--text);
+            padding: 2rem;
+        }
+        .wrap { max-width: 1200px; margin: 0 auto; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 { font-family: "Syne", sans-serif; font-size: 2rem; }
+        .nav-links a {
+            color: var(--accent);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 600;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: var(--bg0);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        h2 { font-family: "Syne", sans-serif; margin-bottom: 1rem; font-size: 1.25rem; }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+        .day-column h3 { font-size: 1.1rem; color: var(--accent); margin-bottom: 1rem; text-align: center; font-family: "Syne", sans-serif; }
+        .session-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+        .session-card .time { color: var(--muted); font-size: 0.75rem; margin-bottom: 0.25rem; }
+        .session-card .subject { font-weight: 700; margin-bottom: 0.25rem; display: block; }
+        .session-card .info { color: var(--muted); font-size: 0.8rem; }
+
+        .conflict {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+        .flash { background: rgba(46, 204, 113, 0.2); color: var(--success); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid rgba(46, 204, 113, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <div>
+                <h1>{{ portal_title }}</h1>
+                <p style="color: var(--muted)">META University Intelligence Support</p>
+            </div>
+            <nav class="nav-links">
+                <a href="{% url 'load-dashboard' %}">Нагрузка</a>
+                <a href="{% url 'schedule-dashboard' %}">Расписание</a>
+                <a href="/swagger/" target="_blank">API Документация</a>
+            </nav>
+        </header>
+
+        <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+            <form method="GET" action="{% url 'schedule-dashboard' %}" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div>
+                    <label style="color: var(--muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Преподаватель</label>
+                    <select name="teacher_id" style="padding: 0.5rem; background: var(--bg0); color: var(--text); border: 1px solid var(--border); border-radius: 6px;">
+                        <option value="">Все преподаватели</option>
+                        {% for t in teachers %}
+                            <option value="{{ t.id }}" {% if current_teacher_id == t.id|stringformat:"s" %}selected{% endif %}>{{ t.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: var(--muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Группа</label>
+                    <select name="group_id" style="padding: 0.5rem; background: var(--bg0); color: var(--text); border: 1px solid var(--border); border-radius: 6px;">
+                        <option value="">Все группы</option>
+                        {% for g in groups %}
+                            <option value="{{ g.id }}" {% if current_group_id == g.id|stringformat:"s" %}selected{% endif %}>{{ g.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color: var(--muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Аудитория</label>
+                    <select name="room_id" style="padding: 0.5rem; background: var(--bg0); color: var(--text); border: 1px solid var(--border); border-radius: 6px;">
+                        <option value="">Все аудитории</option>
+                        {% for r in rooms %}
+                            <option value="{{ r.id }}" {% if current_room_id == r.id|stringformat:"s" %}selected{% endif %}>{{ r.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn" style="padding: 0.5rem 1rem;">Фильтровать</button>
+                    <a href="{% url 'schedule-dashboard' %}" class="btn btn--warning" style="padding: 0.5rem 1rem; margin-left: 0.5rem;">Сбросить</a>
+                </div>
+            </form>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2>Генерация расписания</h2>
+                <p style="color: var(--muted); font-size: 0.9rem;">Алгоритм учитывает вместимость аудиторий и отсутствие окон.</p>
+            </div>
+            <a href="{% url 'run-scheduler' %}" class="btn">Сгенерировать сейчас</a>
+        </div>
+
+        {% if conflicts %}
+        <div class="card" style="border-color: var(--warning);">
+            <h2>Замечания к расписанию</h2>
+            {% for c in conflicts %}
+                <div class="conflict">{{ c.message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="schedule-grid">
+            <div class="day-column">
+                <h3>Понедельник</h3>
+                {% for s in sessions %}
+                    {% if s.starts_at|date:"w" == "1" %}
+                    <div class="session-card">
+                        <div class="time">{{ s.starts_at|date:"H:i" }} — {{ s.ends_at|date:"H:i" }}</div>
+                        <span class="subject">{{ s.course.title }}</span>
+                        <div class="info">{{ s.teacher.full_name }}<br>Ауд. {{ s.room }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="day-column">
+                <h3>Вторник</h3>
+                {% for s in sessions %}
+                    {% if s.starts_at|date:"w" == "2" %}
+                    <div class="session-card">
+                        <div class="time">{{ s.starts_at|date:"H:i" }} — {{ s.ends_at|date:"H:i" }}</div>
+                        <span class="subject">{{ s.course.title }}</span>
+                        <div class="info">{{ s.teacher.full_name }}<br>Ауд. {{ s.room }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="day-column">
+                <h3>Среда</h3>
+                {% for s in sessions %}
+                    {% if s.starts_at|date:"w" == "3" %}
+                    <div class="session-card">
+                        <div class="time">{{ s.starts_at|date:"H:i" }} — {{ s.ends_at|date:"H:i" }}</div>
+                        <span class="subject">{{ s.course.title }}</span>
+                        <div class="info">{{ s.teacher.full_name }}<br>Ауд. {{ s.room }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="day-column">
+                <h3>Четверг</h3>
+                {% for s in sessions %}
+                    {% if s.starts_at|date:"w" == "4" %}
+                    <div class="session-card">
+                        <div class="time">{{ s.starts_at|date:"H:i" }} — {{ s.ends_at|date:"H:i" }}</div>
+                        <span class="subject">{{ s.course.title }}</span>
+                        <div class="info">{{ s.teacher.full_name }}<br>Ауд. {{ s.room }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="day-column">
+                <h3>Пятница</h3>
+                {% for s in sessions %}
+                    {% if s.starts_at|date:"w" == "5" %}
+                    <div class="session-card">
+                        <div class="time">{{ s.starts_at|date:"H:i" }} — {{ s.ends_at|date:"H:i" }}</div>
+                        <span class="subject">{{ s.course.title }}</span>
+                        <div class="info">{{ s.teacher.full_name }}<br>Ауд. {{ s.room }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

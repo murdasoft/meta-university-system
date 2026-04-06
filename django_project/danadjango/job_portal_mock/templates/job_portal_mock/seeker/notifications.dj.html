@@ -1,0 +1,25 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Уведомления{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/seeker_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Уведомления</h1>
+    <p class="mock-page-lead">Центр сообщений для соискателя.</p>
+    <div class="mock-list-cards">
+      <div class="mock-card">
+        <p class="mock-card__title">Работодатель просмотрел ваше резюме</p>
+        <p class="mock-card__text">ТОО «Дана» · 2 часа назад · <span class="mock-badge">новое</span></p>
+      </div>
+      <div class="mock-card">
+        <p class="mock-card__title">Напоминание: дополните раздел «Опыт»</p>
+        <p class="mock-card__text">Система · вчера</p>
+      </div>
+      <div class="mock-card">
+        <p class="mock-card__title">Вакансия из сохранённых закрыта</p>
+        <p class="mock-card__text">Product Manager · 18.03</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

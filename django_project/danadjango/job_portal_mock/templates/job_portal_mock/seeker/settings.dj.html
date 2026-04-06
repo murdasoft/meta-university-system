@@ -1,0 +1,30 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Настройки профиля{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/seeker_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Настройки профиля</h1>
+    <p class="mock-page-lead">Контакты, видимость, смена пароля (макет формы).</p>
+    <form class="mock-form" action="#" onsubmit="return false;">
+      <div>
+        <label for="f-name">Имя и фамилия</label>
+        <input id="f-name" type="text" value="{{ mock_user.display|default:'Айдар Н.' }}" readonly>
+      </div>
+      <div>
+        <label for="f-email">Email</label>
+        <input id="f-email" type="email" value="{{ mock_user.email|default:'demo@example.kz' }}" readonly>
+      </div>
+      <div>
+        <label for="f-phone">Телефон</label>
+        <input id="f-phone" type="tel" value="+7 700 000 00 00" readonly>
+      </div>
+      <div>
+        <label for="f-bio">Кратко о себе</label>
+        <textarea id="f-bio" readonly>Текст для демонстрации поля…</textarea>
+      </div>
+      <span class="mock-btn mock-btn--primary">Сохранить изменения</span>
+    </form>
+  </div>
+</div>
+{% endblock %}

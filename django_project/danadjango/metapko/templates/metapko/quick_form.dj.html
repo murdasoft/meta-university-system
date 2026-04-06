@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ form_title }} — IIKO · Meta-университет</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg0: #0a1018;
+            --bg1: #121c28;
+            --accent: #4ecdc4;
+            --text: #eef4f8;
+            --muted: #8b9aaf;
+            --card: rgba(18, 32, 48, 0.82);
+            --border: rgba(78, 205, 196, 0.22);
+            --err: #ff9a9a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "DM Sans", system-ui, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse 80% 50% at 15% 10%, rgba(78, 205, 196, 0.12), transparent),
+                linear-gradient(165deg, var(--bg0), var(--bg1));
+            color: var(--text);
+            padding: 1.25rem 1.5rem 2rem;
+        }
+        .wrap { max-width: 560px; margin: 0 auto; }
+        header {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(1.2rem, 4vw, 1.55rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .back {
+            display: inline-block;
+            margin-top: 0.65rem;
+            color: var(--accent);
+            font-size: 0.88rem;
+            text-decoration: none;
+        }
+        .back:hover { text-decoration: underline; }
+        .msg {
+            padding: 0.65rem 0.85rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.88rem;
+            background: rgba(78, 205, 196, 0.15);
+            border: 1px solid var(--border);
+            color: var(--accent);
+        }
+        .msg.error { background: rgba(255, 107, 107, 0.12); color: var(--err); border-color: rgba(255, 107, 107, 0.25); }
+        form.card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem 1.15rem;
+        }
+        .row { margin-bottom: 1rem; }
+        .row label {
+            display: block;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted);
+            margin-bottom: 0.35rem;
+        }
+        .ctl, select.ctl {
+            width: 100%;
+            padding: 0.55rem 0.65rem;
+            border-radius: 8px;
+            border: 1px solid rgba(139, 154, 175, 0.35);
+            background: rgba(10, 16, 24, 0.65);
+            color: var(--text);
+            font: inherit;
+            font-size: 0.92rem;
+        }
+        .ctl:focus, select.ctl:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.2);
+        }
+        select.ctl[multiple] {
+            min-height: 10rem;
+            padding: 0.35rem;
+        }
+        .errlist { color: var(--err); font-size: 0.82rem; margin-top: 0.35rem; list-style: none; }
+        .actions { margin-top: 1.25rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+        button[type="submit"] {
+            padding: 0.55rem 1.1rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(78, 205, 196, 0.35);
+            color: var(--text);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover { background: rgba(78, 205, 196, 0.5); }
+        .cbrow { display: flex; align-items: center; gap: 0.5rem; }
+        .cbrow input { width: auto; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <h1>{{ form_title }}</h1>
+            <a class="back" href="{% url 'metapko-dashboard' %}">← К дашборду</a>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="msg{% if message.tags %} {{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form class="card" method="post" action="">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="row">
+                {% if field.field.widget.input_type == 'checkbox' %}
+                <label class="cbrow">
+                    {{ field }}
+                    <span>{{ field.label }}</span>
+                </label>
+                {% else %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% endif %}
+                {% if field.help_text %}<p class="mini" style="color:var(--muted);font-size:0.8rem;margin-top:0.3rem;">{{ field.help_text }}</p>{% endif %}
+                {% if field.errors %}
+                <ul class="errlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+            <ul class="errlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+            {% endif %}
+            <div class="actions">
+                <button type="submit">Сохранить</button>
+                <a class="back" href="{% url 'metapko-dashboard' %}">Отмена</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

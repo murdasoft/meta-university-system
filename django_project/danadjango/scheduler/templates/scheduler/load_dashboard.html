@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ portal_title }} — META University</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg0: #0a1018;
+            --bg1: #121c28;
+            --accent: #4ecdc4;
+            --accent2: #ff6b6b;
+            --text: #eef4f8;
+            --muted: #8b9aaf;
+            --card: rgba(18, 32, 48, 0.82);
+            --border: rgba(78, 205, 196, 0.22);
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "DM Sans", system-ui, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(165deg, var(--bg0), var(--bg1));
+            color: var(--text);
+            padding: 2rem;
+        }
+        .wrap { max-width: 1100px; margin: 0 auto; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 { font-family: "Syne", sans-serif; font-size: 2rem; }
+        .nav-links a {
+            color: var(--accent);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 600;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: var(--bg0);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn--warning { background: var(--warning); }
+        .btn--danger { background: var(--danger); color: white; }
+        .btn:hover { opacity: 0.9; }
+
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        h2 { font-family: "Syne", sans-serif; margin-bottom: 1rem; font-size: 1.25rem; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 1rem 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; }
+
+        .progress-bg { background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .progress-fg { height: 100%; background: var(--accent); transition: width 0.3s; }
+        .overload { background: var(--accent2) !important; }
+
+        .conflict {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .conflict--error { background: rgba(231, 76, 60, 0.2); color: #ff8a8a; border: 1px solid rgba(231, 76, 60, 0.3); }
+        .conflict--warning { background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3); }
+
+        .flash {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <div>
+                <h1>{{ portal_title }}</h1>
+                <p style="color: var(--muted)">META University Intelligence Support</p>
+            </div>
+            <nav class="nav-links">
+                <a href="{% url 'load-dashboard' %}">Нагрузка</a>
+                <a href="{% url 'schedule-dashboard' %}">Расписание</a>
+                <a href="/swagger/" target="_blank">API Документация</a>
+                <a href="/" style="color: var(--muted)">Выход</a>
+            </nav>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="grid">
+            <div class="main-col">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2>Нагрузка преподавателей</h2>
+                        <a href="{% url 'run-distributor' %}" class="btn">Запустить авто-распределение</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Преподаватель</th>
+                                <th>Нагрузка (часов)</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in teachers %}
+                            <tr>
+                                <td>
+                                    <strong><a href="{% url 'teacher-detail' t.id %}" style="color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--accent);">{{ t.full_name }}</a></strong><br>
+                                    <small style="color: var(--muted)">{{ t.position }}</small>
+                                </td>
+                                <td>
+                                    {{ t.scheduler_profile.max_load_hours }} ч. макс.
+                                    <div class="progress-bg">
+                                        <div class="progress-fg" style="width: 40%"></div>
+                                    </div>
+                                </td>
+                                <td><span style="color: var(--success)">В норме</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2>Активные дисциплины</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Часов</th>
+                                <th>Тип</th>
+                                <th>Преподаватель</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in courses %}
+                            <tr>
+                                <td>{{ c.title }}</td>
+                                <td>{{ c.scheduler_profile.target_hours }}</td>
+                                <td>{{ c.scheduler_profile.get_course_type_display }}</td>
+                                <td>
+                                    {% if c.teacher %}
+                                        {{ c.teacher.full_name }}
+                                    {% else %}
+                                        <span style="color: var(--accent2)">Не назначен</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="side-col">
+                <div class="card">
+                    <h2>Конфликты и ошибки</h2>
+                    {% if conflicts %}
+                        {% for conflict in conflicts %}
+                        <div class="conflict conflict--{{ conflict.severity }}">
+                            {{ conflict.message }}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: var(--muted); font-size: 0.9rem;">Конфликтов не обнаружено. Система работает стабильно.</p>
+                    {% endif %}
+                </div>
+
+                <div class="card" style="background: rgba(231, 76, 60, 0.05);">
+                    <h2>Опасная зона</h2>
+                    <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem;">Сброс всех сессий и результатов распределения текущего года.</p>
+                    <a href="{% url 'clear-all' %}" class="btn btn--danger" onclick="return confirm('Вы уверены? Это удалит все сгенерированные данные!')">Очистить всё</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

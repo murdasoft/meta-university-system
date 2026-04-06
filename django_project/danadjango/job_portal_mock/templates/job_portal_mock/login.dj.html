@@ -1,0 +1,31 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<div class="mock-auth-wrap">
+  <div class="mock-auth-card">
+    <h1 class="mock-page-title">Вход в демо-кабинет</h1>
+    <p class="mock-page-lead">Данные проверяются локально для макета (сессия), без связи с основной учётной записью сайта.</p>
+    <div class="mock-test-box">
+      <strong>Готовые тестовые логины:</strong>
+      <ul>
+        <li><code>seeker</code> / <code>demo123</code> — кабинет соискателя</li>
+        <li><code>employer</code> / <code>demo123</code> — кабинет работодателя</li>
+        <li><code>admin_demo</code> / <code>demo123</code> — макет админ-панели</li>
+      </ul>
+    </div>
+    <form class="mock-form mock-form--wide" method="post" action="{% url 'job_portal_mock:login' %}">
+      {% csrf_token %}
+      <div>
+        <label for="id_username">Логин</label>
+        <input id="id_username" name="username" type="text" autocomplete="username" required autofocus placeholder="seeker">
+      </div>
+      <div>
+        <label for="id_password">Пароль</label>
+        <input id="id_password" name="password" type="password" autocomplete="current-password" required placeholder="demo123">
+      </div>
+      <button type="submit" class="mock-btn mock-btn--primary">Войти</button>
+    </form>
+    <p class="mock-auth-footer">Нет аккаунта? <a href="{% url 'job_portal_mock:register' %}">Регистрация (тест)</a></p>
+  </div>
+</div>
+{% endblock %}

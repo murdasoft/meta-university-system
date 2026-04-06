@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f5f2">
+  <title>{% block title %}Макет{% endblock %} — Портал вакансий</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'job_portal_mock/css/mock.css' %}">
+</head>
+<body class="mock-job">
+  <header class="mock-topbar">
+    <div class="mock-topbar__inner">
+      <a class="mock-brand" href="{% url 'job_portal_mock:home' %}">Портал вакансий · макет</a>
+      <div class="mock-top-actions">
+        {% if mock_user %}
+          <span class="mock-user-pill" title="{{ mock_user.email }}">{{ mock_user.display }}</span>
+          {% if mock_user.role == 'seeker' %}
+            <a class="mock-btn mock-btn--link" href="{% url 'job_portal_mock:seeker_dashboard' %}">Кабинет</a>
+          {% elif mock_user.role == 'employer' %}
+            <a class="mock-btn mock-btn--link" href="{% url 'job_portal_mock:employer_dashboard' %}">Кабинет</a>
+          {% elif mock_user.role == 'admin' %}
+            <a class="mock-btn mock-btn--link" href="{% url 'job_portal_mock:admin_users' %}">Админ</a>
+          {% endif %}
+          <form class="mock-inline-form" action="{% url 'job_portal_mock:mock_logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="mock-btn mock-btn--ghost">Выйти</button>
+          </form>
+        {% else %}
+          <a class="mock-btn mock-btn--link" href="{% url 'job_portal_mock:login' %}">Вход</a>
+          <a class="mock-btn mock-btn--link mock-btn--primary" href="{% url 'job_portal_mock:register' %}">Регистрация</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  <div class="mock-demo-strip">
+    <div class="mock-demo-strip__inner">
+      <p class="mock-demo-strip__lede"><strong>Демо:</strong> тестовые вакансии и вход без связи с основным сайтом.</p>
+      <div class="mock-demo-nav-scroll">
+        <nav class="mock-demo-nav" aria-label="Разделы макета">
+          <a href="{% url 'job_portal_mock:home' %}" class="mock-nav-item{% if mock_nav_section == 'home' %} is-active{% endif %}">Главная</a>
+          <a href="{% url 'job_portal_mock:vacancies' %}" class="mock-nav-item{% if mock_nav_section == 'vacancies' %} is-active{% endif %}">Вакансии</a>
+          <a href="{% url 'job_portal_mock:seeker_dashboard' %}" class="mock-nav-item{% if mock_nav_section == 'seeker' %} is-active{% endif %}">Соискатель</a>
+          <a href="{% url 'job_portal_mock:employer_dashboard' %}" class="mock-nav-item{% if mock_nav_section == 'employer' %} is-active{% endif %}">Работодатель</a>
+          <a href="{% url 'job_portal_mock:admin_users' %}" class="mock-nav-item{% if mock_nav_section == 'admin' %} is-active{% endif %}">Админ-панель</a>
+          {% if not mock_user %}
+          <a href="{% url 'job_portal_mock:login' %}" class="mock-nav-item{% if mock_nav_section == 'auth' %} is-active{% endif %}">Вход / Регистрация</a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
+  </div>
+  {% if messages %}
+  <ul class="mock-messages" role="status">
+    {% for message in messages %}
+    <li class="mock-message mock-message--{{ message.level_tag }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <main class="mock-main">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="mock-footer">
+    Макет для ознакомления · <code>/api/vacancies-mock/</code>
+    · тест: <code>seeker</code> / <code>demo123</code>, <code>employer</code> / <code>demo123</code>
+  </footer>
+  <script src="{% static 'job_portal_mock/js/mock.js' %}" defer></script>
+</body>
+</html>

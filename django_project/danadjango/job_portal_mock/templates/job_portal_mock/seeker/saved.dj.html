@@ -1,0 +1,21 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Сохранённые вакансии{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/seeker_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Сохранённые вакансии</h1>
+    <p class="mock-page-lead">Избранное для быстрого доступа.</p>
+    <div class="mock-job-list">
+      <div class="mock-job-card">
+        <p class="mock-job-card__title">Product Manager</p>
+        <p class="mock-job-card__meta">Шымкент · сохранено 20.03.2026</p>
+      </div>
+      <div class="mock-job-card">
+        <p class="mock-job-card__title">DevOps engineer</p>
+        <p class="mock-job-card__meta">Удалённо · сохранено 15.03.2026</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

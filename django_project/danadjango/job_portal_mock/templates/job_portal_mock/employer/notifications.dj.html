@@ -1,0 +1,21 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Уведомления работодателя{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/employer_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Уведомления</h1>
+    <p class="mock-page-lead">Новые отклики, сообщения, системные напоминания.</p>
+    <div class="mock-list-cards">
+      <div class="mock-card">
+        <p class="mock-card__title">Новый отклик на вакансию «Senior Python»</p>
+        <p class="mock-card__text">А. Касымов · 30 минут назад <span class="mock-badge">новое</span></p>
+      </div>
+      <div class="mock-card">
+        <p class="mock-card__title">Срок публикации вакансии истекает через 3 дня</p>
+        <p class="mock-card__text">HR-менеджер · напоминание</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

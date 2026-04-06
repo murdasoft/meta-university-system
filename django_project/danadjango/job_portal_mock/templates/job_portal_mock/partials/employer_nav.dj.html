@@ -1,0 +1,8 @@
+<aside class="mock-side-nav" aria-label="Меню работодателя">
+  <a href="{% url 'job_portal_mock:employer_dashboard' %}" class="{% if active == 'emp_dash' %}is-active{% endif %}">Дашборд</a>
+  <a href="{% url 'job_portal_mock:employer_vacancies' %}" class="{% if active == 'emp_vac' %}is-active{% endif %}">Мои вакансии</a>
+  <a href="{% url 'job_portal_mock:employer_applications' %}" class="{% if active == 'emp_apps' %}is-active{% endif %}">Отклики на вакансии</a>
+  <a href="{% url 'job_portal_mock:employer_resume_search' %}" class="{% if active == 'emp_search' %}is-active{% endif %}">Поиск резюме</a>
+  <a href="{% url 'job_portal_mock:employer_company' %}" class="{% if active == 'emp_company' %}is-active{% endif %}">Настройки компании</a>
+  <a href="{% url 'job_portal_mock:employer_notifications' %}" class="{% if active == 'emp_notif' %}is-active{% endif %}">Уведомления</a>
+</aside>

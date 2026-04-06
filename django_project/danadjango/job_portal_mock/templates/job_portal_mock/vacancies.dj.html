@@ -1,0 +1,98 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Каталог вакансий{% endblock %}
+{% block content %}
+<header class="mock-catalog-head">
+  <h1 class="mock-page-title">Вакансии</h1>
+  <p class="mock-catalog-stats">
+    В каталоге <strong>{{ vacancy_catalog_total }}</strong> позиций
+    {% if vacancies|length != vacancy_catalog_total %}
+    · по фильтру: <strong>{{ vacancies|length }}</strong>
+    {% endif %}
+  </p>
+</header>
+
+<div class="mock-quick-filters" aria-label="Быстрый выбор сферы">
+  <a href="{% url 'job_portal_mock:vacancies' %}" class="mock-pill{% if not filters.cat %} is-active{% endif %}">Все сферы</a>
+  {% for c in filter_categories %}
+  {% if c.count %}
+  <a href="{% url 'job_portal_mock:vacancies' %}?cat={{ c.key }}{% if filters.q %}&q={{ filters.q|urlencode }}{% endif %}{% if filters.fmt %}&fmt={{ filters.fmt }}{% endif %}{% if filters.emp %}&emp={{ filters.emp }}{% endif %}{% if filters.city %}&city={{ filters.city|urlencode }}{% endif %}"
+     class="mock-pill{% if filters.cat == c.key %} is-active{% endif %}"
+     style="--pill-accent: {{ c.color }};">{{ c.label }} <span class="mock-pill__n">{{ c.count }}</span></a>
+  {% endif %}
+  {% endfor %}
+</div>
+
+<form class="mock-filter-panel" method="get" action="{% url 'job_portal_mock:vacancies' %}">
+  <div class="mock-filter-panel__head">Расширенный поиск</div>
+  <div class="mock-filter-grid">
+    <label class="mock-filter-field">
+      <span class="mock-filter-field__l">Ключевые слова</span>
+      <input type="search" name="q" placeholder="Например: Python, склад, врач" value="{{ filters.q }}" aria-label="Поиск">
+    </label>
+    <label class="mock-filter-field">
+      <span class="mock-filter-field__l">Город / регион</span>
+      <input type="text" name="city" placeholder="Начните ввод…" value="{{ filters.city }}" aria-label="Город" list="mock-cities-list">
+    </label>
+    <label class="mock-filter-field">
+      <span class="mock-filter-field__l">Сфера</span>
+      <select name="cat" aria-label="Категория">
+        <option value="">Все ({{ vacancy_catalog_total }})</option>
+        {% for c in filter_categories %}
+        {% if c.count %}
+        <option value="{{ c.key }}" {% if filters.cat == c.key %}selected{% endif %}>{{ c.label }} ({{ c.count }})</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+    </label>
+    <label class="mock-filter-field">
+      <span class="mock-filter-field__l">Формат работы</span>
+      <select name="fmt" aria-label="Формат">
+        <option value="">Любой</option>
+        <option value="office" {% if filters.fmt == 'office' %}selected{% endif %}>Офис / на месте</option>
+        <option value="remote" {% if filters.fmt == 'remote' %}selected{% endif %}>Удалённо</option>
+        <option value="hybrid" {% if filters.fmt == 'hybrid' %}selected{% endif %}>Гибрид</option>
+      </select>
+    </label>
+    <label class="mock-filter-field">
+      <span class="mock-filter-field__l">Занятость</span>
+      <select name="emp" aria-label="Занятость">
+        <option value="">Любая</option>
+        <option value="full" {% if filters.emp == 'full' %}selected{% endif %}>Полная</option>
+        <option value="part" {% if filters.emp == 'part' %}selected{% endif %}>Частичная / гибкий график</option>
+        <option value="shift" {% if filters.emp == 'shift' %}selected{% endif %}>Сменная</option>
+        <option value="project" {% if filters.emp == 'project' %}selected{% endif %}>Проект</option>
+      </select>
+    </label>
+  </div>
+  <div class="mock-filter-panel__actions">
+    <button type="submit" class="mock-btn mock-btn--primary">Показать результаты</button>
+    <a class="mock-btn mock-btn--link" href="{% url 'job_portal_mock:vacancies' %}">Сбросить всё</a>
+  </div>
+</form>
+
+<datalist id="mock-cities-list">
+  {% for city in unique_cities %}
+  <option value="{{ city }}">
+  {% endfor %}
+</datalist>
+
+{% if vacancies %}
+<div class="mock-job-list mock-job-list--spaced">
+  {% for job in vacancies %}
+  <a href="{% url 'job_portal_mock:vacancy_detail' job.slug %}" class="mock-job-card mock-job-card--rich" style="--card-accent: {{ job.accent_color }};">
+    <div class="mock-job-card__row">
+      <span class="mock-job-card__sector">{{ job.cat_label }}</span>
+      <time class="mock-job-card__date">{{ job.posted }}</time>
+    </div>
+    <p class="mock-job-card__title">{{ job.title }}</p>
+    <p class="mock-job-card__meta">{{ job.company }} · {{ job.city }}</p>
+    <p class="mock-job-card__salary">{{ job.salary }}</p>
+    <p class="mock-job-card__tags">{% for t in job.tags %}<span class="mock-tag">{{ t }}</span>{% endfor %}</p>
+    <p class="mock-job-card__foot">{{ job.format }} · {{ job.employment }}</p>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="mock-empty">По таким условиям ничего не нашлось — <a href="{% url 'job_portal_mock:vacancies' %}">сбросьте фильтры</a> или измените сферу.</p>
+{% endif %}
+{% endblock %}

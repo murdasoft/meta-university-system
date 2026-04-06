@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — IIKO · Meta-университет</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg0: #0c1412;
+            --bg1: #14221c;
+            --accent: #3dd6a5;
+            --accent-dim: #2a9d78;
+            --text: #e8f5f0;
+            --muted: #8aa89e;
+            --danger: #ff6b6b;
+            --card: rgba(20, 40, 32, 0.85);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "DM Sans", system-ui, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse 120% 80% at 10% 20%, rgba(61, 214, 165, 0.12), transparent),
+                radial-gradient(ellipse 80% 60% at 90% 80%, rgba(42, 157, 120, 0.1), transparent),
+                linear-gradient(165deg, var(--bg0), var(--bg1));
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .panel {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card);
+            border: 1px solid rgba(61, 214, 165, 0.25);
+            border-radius: 16px;
+            padding: 2.25rem 2rem;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+        }
+        h1 {
+            font-family: "Syne", sans-serif;
+            font-size: 1.65rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.35rem;
+        }
+        .sub {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.75rem;
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(138, 168, 158, 0.35);
+            background: rgba(12, 20, 18, 0.6);
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(61, 214, 165, 0.2);
+        }
+        button[type="submit"] {
+            width: 100%;
+            margin-top: 0.5rem;
+            padding: 0.85rem 1rem;
+            border: none;
+            border-radius: 10px;
+            font-family: "Syne", sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+            color: #061210;
+        }
+        button[type="submit"]:hover { filter: brightness(1.06); }
+        .messages {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+        .messages li {
+            padding: 0.65rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .messages .error { background: rgba(255, 107, 107, 0.2); color: #ffb4b4; }
+        .messages .success { background: rgba(61, 214, 165, 0.2); color: var(--accent); }
+        .hint {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
+            padding: 0.75rem 0.9rem;
+            border-radius: 10px;
+            background: rgba(61, 214, 165, 0.08);
+            border: 1px solid rgba(61, 214, 165, 0.2);
+        }
+        .hint .mono { font-family: ui-monospace, monospace; color: var(--accent); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h1>IIKO · Meta-университет</h1>
+        <p class="sub">Вход в портал API и интеграций</p>
+
+        {% if portal_hint_login or portal_hint_password %}
+        <p class="hint">
+            Подсказка: логин <span class="mono">{{ portal_hint_login }}</span>,
+            пароль <span class="mono">{{ portal_hint_password }}</span>
+        </p>
+        {% endif %}
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form method="post" action="">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <ul class="messages">
+                {% for err in form.non_field_errors %}
+                <li class="error">{{ err }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <label for="id_username">Имя пользователя</label>
+            <input type="text" name="username" id="id_username" autocomplete="username" required autofocus>
+            <label for="id_password">Пароль</label>
+            <input type="password" name="password" id="id_password" autocomplete="current-password" required>
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+</body>
+</html>

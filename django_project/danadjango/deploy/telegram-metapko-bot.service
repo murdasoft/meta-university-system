@@ -1,0 +1,16 @@
+[Unit]
+Description=Telegram bot (Meta-PKO / Qazaq Dana API client)
+After=network.target qazaqdana.service
+
+[Service]
+Type=simple
+User=qazaqdana
+Group=www-data
+WorkingDirectory=/var/www/qazaqdana
+EnvironmentFile=-/var/www/qazaqdana/.env.telegram
+ExecStart=/var/www/qazaqdana/venv/bin/python /var/www/qazaqdana/scripts/telegram_metapko_bot.py
+Restart=always
+RestartSec=8
+
+[Install]
+WantedBy=multi-user.target

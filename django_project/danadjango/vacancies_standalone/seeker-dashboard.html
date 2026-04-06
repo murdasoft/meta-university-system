@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef2f0">
+  <script src="js/theme.js"></script>
+  <title>Личный кабинет — соискатель</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="mock-job" data-page="seeker" data-require-role="seeker" data-dashboard-doc="dash.seeker.docTitle">
+  <header class="mock-topbar">
+    <div class="mock-topbar__inner">
+      <a class="mock-brand" href="index.html">Портал вакансий</a>
+      <div class="mock-top-actions" id="top-actions"></div>
+    </div>
+  </header>
+  <div class="mock-demo-strip">
+    <div class="mock-demo-strip__inner">
+      <div class="mock-demo-nav-scroll">
+        <nav class="mock-demo-nav" aria-label="Основные разделы">
+          <a href="index.html" class="mock-nav-item">Главная</a>
+          <a href="vacancies.html" class="mock-nav-item">Вакансии</a>
+          <a href="contacts.html" class="mock-nav-item">Контакты</a>
+          <a href="seeker-dashboard.html" class="mock-nav-item">Соискатель</a>
+          <a href="employer-dashboard.html" class="mock-nav-item">Работодатель</a>
+          <a href="admin-users.html" class="mock-nav-item">Админ-панель</a>
+          <a href="login.html" class="mock-nav-item" id="nav-auth-link">Вход / Регистрация</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <main class="mock-main">
+    <div class="mock-portal">
+      <aside class="mock-side-nav" aria-label="Меню соискателя">
+        <a href="seeker-dashboard.html" class="is-active" data-i18n="dash.seeker.nav1">Дашборд</a>
+        <span class="mock-side-nav__stub" data-i18n="dash.seeker.nav2">Мои резюме</span>
+        <span class="mock-side-nav__stub" data-i18n="dash.seeker.nav3">Мои отклики</span>
+        <span class="mock-side-nav__stub" data-i18n="dash.seeker.nav4">Сохранённые вакансии</span>
+        <span class="mock-side-nav__stub" data-i18n="dash.seeker.nav5">Настройки профиля</span>
+        <span class="mock-side-nav__stub" data-i18n="dash.seeker.nav6">Уведомления</span>
+      </aside>
+      <div>
+        <h1 class="mock-page-title" data-i18n="dash.seeker.title">Личный кабинет соискателя</h1>
+        <p class="mock-page-lead">
+          <span data-i18n="dash.seeker.lead">Здравствуйте, </span><strong data-mock-user-display></strong><span data-i18n="dash.seeker.leadEnd">.</span>
+        </p>
+        <div class="mock-stats">
+          <div class="mock-stat"><div class="mock-stat__val">12</div><div class="mock-stat__label" data-i18n="dash.seeker.s1">Откликов</div></div>
+          <div class="mock-stat"><div class="mock-stat__val">48</div><div class="mock-stat__label" data-i18n="dash.seeker.s2">Просмотров профиля</div></div>
+          <div class="mock-stat"><div class="mock-stat__val">5</div><div class="mock-stat__label" data-i18n="dash.seeker.s3">Сохранённых вакансий</div></div>
+        </div>
+        <section class="mock-dash-next" aria-labelledby="dash-seeker-next">
+          <h2 id="dash-seeker-next" data-i18n="dash.seeker.nextTitle">Что сделать дальше</h2>
+          <ul>
+            <li data-i18n="dash.seeker.n1"></li>
+            <li data-i18n="dash.seeker.n2"></li>
+            <li data-i18n="dash.seeker.n3"></li>
+          </ul>
+        </section>
+        <p class="mock-hint" data-i18n="dash.seeker.hint"></p>
+        <p class="mock-page-lead" style="margin-top:1.5rem;"><a href="vacancies.html" data-i18n="dash.seeker.link">Перейти к каталогу вакансий</a></p>
+      </div>
+    </div>
+  </main>
+  <footer class="mock-footer mock-footer--site" data-site-footer aria-label="Подвал сайта"></footer>
+  <script src="js/i18n.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/portal-guard.js"></script>
+</body>
+</html>

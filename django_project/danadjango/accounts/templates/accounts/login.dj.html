@@ -1,0 +1,532 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Вход - Qazaq Dana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2f4f 50%, #0a1628 100%);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 15px;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(41, 128, 185, 0.3);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-100px) translateX(50px) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        /* Language badges animation */
+        .languages-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .lang-badge {
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            animation: langFloat 3s ease-in-out infinite;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-badge:nth-child(1) { animation-delay: 0s; }
+        .lang-badge:nth-child(2) { animation-delay: 0.5s; }
+        .lang-badge:nth-child(3) { animation-delay: 1s; }
+
+        @keyframes langFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+        }
+
+        .lang-badge:hover {
+            animation: langPulse 0.5s ease-out;
+        }
+
+        @keyframes langPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 80px rgba(41, 128, 185, 0.2);
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 50%, #5dade2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .logo-subtitle {
+            color: #7f8c8d;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: #34495e;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 45px 14px 18px;
+            border: 2px solid #e0e6ed;
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        input:focus ~ .input-icon {
+            color: #3498db;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 50%, #5dade2 100%);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.4);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(52, 152, 219, 0.5);
+        }
+
+        .btn-login:active {
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+            font-size: 14px;
+            text-align: center;
+            animation: shake 0.5s ease-in-out;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .btn-login.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-login.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(93, 173, 226, 0.2));
+            z-index: 1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .deco-1 {
+            width: 250px;
+            height: 250px;
+            top: -125px;
+            right: -125px;
+        }
+
+        .deco-2 {
+            width: 180px;
+            height: 180px;
+            bottom: -90px;
+            left: -90px;
+            animation-delay: -5s;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            html {
+                font-size: 14px;
+            }
+
+            body {
+                padding: 12px;
+                align-items: flex-start;
+                padding-top: 30px;
+                padding-bottom: 30px;
+            }
+
+            .login-container {
+                padding: 35px 25px;
+                border-radius: 20px;
+                max-width: 100%;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .logo-text {
+                font-size: 24px;
+            }
+
+            .logo-subtitle {
+                font-size: 12px;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            .languages-badges {
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+
+            .lang-badge {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+
+            .form-group {
+                margin-bottom: 18px;
+            }
+
+            input[type="text"],
+            input[type="password"] {
+                padding: 12px 40px 12px 16px;
+                font-size: 16px;
+            }
+
+            .btn-login {
+                padding: 14px;
+                font-size: 15px;
+            }
+
+            .deco-1 {
+                width: 150px;
+                height: 150px;
+                top: -75px;
+                right: -75px;
+            }
+
+            .deco-2 {
+                width: 120px;
+                height: 120px;
+                bottom: -60px;
+                left: -60px;
+            }
+
+            .particle {
+                animation-duration: 15s;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .login-container {
+                padding: 25px 20px;
+            }
+
+            .logo-text {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle" style="width: 80px; height: 80px; left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 60px; height: 60px; left: 80%; top: 30%; animation-delay: -3s;"></div>
+        <div class="particle" style="width: 100px; height: 100px; left: 50%; top: 60%; animation-delay: -6s;"></div>
+        <div class="particle" style="width: 70px; height: 70px; left: 20%; top: 70%; animation-delay: -9s;"></div>
+        <div class="particle" style="width: 90px; height: 90px; left: 70%; top: 80%; animation-delay: -12s;"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="deco-circle deco-1"></div>
+        <div class="deco-circle deco-2"></div>
+
+        <div class="logo-container">
+            <img src="{% static 'images/logo.png' %}" alt="Qazaq Dana" class="logo" onerror="this.style.display='none'">
+            <div class="logo-text">Qazaq Dana</div>
+            <div class="logo-subtitle">OCR Администратор</div>
+        </div>
+
+        <div class="languages-badges">
+            <span class="lang-badge">🇷🇺 Русский</span>
+            <span class="lang-badge">🇰🇿 Қазақша</span>
+            <span class="lang-badge">🇬🇧 English</span>
+        </div>
+
+        <h2>Добро пожаловать!</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                <div class="error-message">
+                    ❌ {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'custom_login' %}" id="loginForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_username">Имя пользователя</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="id_username" 
+                        required 
+                        autofocus
+                        placeholder="admin"
+                        autocomplete="username"
+                    >
+                    <span class="input-icon">👤</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Пароль</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="id_password" 
+                        required
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                    >
+                    <span class="input-icon">🔒</span>
+                </div>
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+            
+            <button type="submit" class="btn-login" id="loginBtn">
+                Войти в систему
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('loading');
+            btn.textContent = 'Вход...';
+        });
+
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                const label = this.closest('.form-group').querySelector('label');
+                if (label) label.style.color = '#3498db';
+            });
+            input.addEventListener('blur', function() {
+                const label = this.closest('.form-group').querySelector('label');
+                if (label) label.style.color = '#34495e';
+            });
+        });
+
+        if (window.innerWidth > 600) {
+            const container = document.querySelector('.particles');
+            for (let i = 0; i < 8; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `width:${Math.random()*40+25}px;height:${p.style.width};left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${-Math.random()*15}s`;
+                container.appendChild(p);
+            }
+        }
+    </script>
+</body>
+</html>

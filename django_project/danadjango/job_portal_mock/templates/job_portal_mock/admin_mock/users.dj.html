@@ -1,0 +1,23 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Админ — пользователи{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/admin_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Управление пользователями</h1>
+    <p class="mock-page-lead">Роли, блокировки, журнал действий (макет таблицы).</p>
+    <div class="mock-table-wrap">
+      <table class="mock-table">
+        <thead>
+          <tr><th>Пользователь</th><th>Роль</th><th>Статус</th><th>Регистрация</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>user_01</td><td>Соискатель</td><td><span class="mock-badge">активен</span></td><td>12.02.2026</td></tr>
+          <tr><td>hr_demo</td><td>Работодатель</td><td><span class="mock-badge">активен</span></td><td>05.01.2026</td></tr>
+          <tr><td>spam_test</td><td>Соискатель</td><td><span class="mock-badge mock-badge--neutral">заблокирован</span></td><td>01.03.2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

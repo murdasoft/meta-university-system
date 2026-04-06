@@ -1,0 +1,683 @@
+{% extends 'base.dj.html' %}
+
+{% block title %}Настройки API - Qazaq Dana{% endblock %}
+
+{% block page_title %}Настройки API ключей{% endblock %}
+{% block breadcrumb %}Настройки{% endblock %}
+
+{% block extra_css %}
+<style>
+    .settings-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .settings-section {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+
+    .settings-section:hover {
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--light);
+    }
+
+    .section-title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-lighter));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+    }
+
+    .section-title h2 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .section-title p {
+        font-size: 13px;
+        color: var(--text-light);
+        margin: 0;
+    }
+
+    .add-key-btn {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, var(--success), #229954);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .add-key-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+    }
+
+    .api-keys-list {
+        display: grid;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .api-key-card {
+        background: #f8f9fa;
+        border: 2px solid var(--light);
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s;
+        position: relative;
+    }
+
+    .api-key-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
+    }
+
+    .api-key-card.active {
+        border-color: var(--success);
+        background: rgba(39, 174, 96, 0.05);
+    }
+
+    .api-key-card.inactive {
+        border-color: var(--text-light);
+        opacity: 0.7;
+    }
+
+    .key-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 15px;
+    }
+
+    .key-info h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 5px;
+    }
+
+    .key-info p {
+        font-size: 13px;
+        color: var(--text-light);
+        margin: 0;
+    }
+
+    .key-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        font-size: 14px;
+    }
+
+    .btn-edit {
+        background: rgba(52, 152, 219, 0.1);
+        color: var(--primary);
+    }
+
+    .btn-edit:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-delete {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger);
+    }
+
+    .btn-delete:hover {
+        background: var(--danger);
+        color: white;
+    }
+
+    .key-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid var(--light);
+    }
+
+    .key-detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .key-detail-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-light);
+        font-weight: 600;
+    }
+
+    .key-detail-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        word-break: break-all;
+    }
+
+    .key-detail-value.masked {
+        font-family: monospace;
+        color: var(--text-light);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-active {
+        background: rgba(39, 174, 96, 0.15);
+        color: var(--success);
+    }
+
+    .status-inactive {
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--danger);
+    }
+
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.3s;
+    }
+
+    .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        animation: slideUp 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 16px 16px 0 0;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: var(--text);
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: var(--text-light);
+        transition: color 0.3s;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .close-modal:hover {
+        color: var(--danger);
+        background: rgba(231, 76, 60, 0.1);
+    }
+
+    .modal-body {
+        padding: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--light);
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .form-control textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-help {
+        font-size: 12px;
+        color: var(--text-light);
+        margin-top: 5px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid var(--light);
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-lighter));
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-secondary {
+        background: var(--light);
+        color: var(--text);
+    }
+
+    .btn-secondary:hover {
+        background: #dfe6e9;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-light);
+    }
+
+    .empty-state i {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.3;
+    }
+
+    .info-box {
+        background: rgba(52, 152, 219, 0.05);
+        border-left: 4px solid var(--primary);
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .info-box i {
+        color: var(--primary);
+        margin-right: 10px;
+    }
+
+    .info-box p {
+        margin: 0;
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .settings-section {
+            padding: 20px;
+        }
+
+        .key-header {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .key-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .modal-content {
+            width: 95%;
+            margin: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <!-- API Keys Section -->
+    <div class="settings-section">
+        <div class="section-header">
+            <div class="section-title-wrapper">
+                <div class="section-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div class="section-title">
+                    <h2>API Ключи</h2>
+                    <p>Управление ключами для внешних сервисов</p>
+                </div>
+            </div>
+            <button class="add-key-btn" onclick="showAddKeyModal()">
+                <i class="fas fa-plus"></i>
+                Добавить ключ
+            </button>
+        </div>
+
+        <div class="api-keys-list">
+            {% for key in api_keys %}
+            <div class="api-key-card {% if key.is_active %}active{% else %}inactive{% endif %}">
+                <div class="key-header">
+                    <div class="key-info">
+                        <h3>{{ key.name }}</h3>
+                        <p>{{ key.get_key_type_display }}</p>
+                    </div>
+                    <div class="key-actions">
+                        <span class="status-badge {% if key.is_active %}status-active{% else %}status-inactive{% endif %}">
+                            {% if key.is_active %}Активен{% else %}Неактивен{% endif %}
+                        </span>
+                        <button class="btn-icon btn-edit" onclick="editKey({{ key.id }})" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon btn-delete" onclick="deleteKey({{ key.id }})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                {% if key.description %}
+                <p style="font-size: 13px; color: var(--text-light); margin-bottom: 15px;">{{ key.description }}</p>
+                {% endif %}
+
+                <div class="key-details">
+                    <div class="key-detail-item">
+                        <div class="key-detail-label">Тип</div>
+                        <div class="key-detail-value">{{ key.get_key_type_display }}</div>
+                    </div>
+                    <div class="key-detail-item">
+                        <div class="key-detail-label">Значение</div>
+                        <div class="key-detail-value masked">
+                            {% if key.api_key %}
+                                {{ key.api_key|truncatechars:40 }}...
+                            {% else %}
+                                Не указано
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="key-detail-item">
+                        <div class="key-detail-label">Создан</div>
+                        <div class="key-detail-value">{{ key.created_at|date:"d.m.Y H:i" }}</div>
+                    </div>
+                    <div class="key-detail-item">
+                        <div class="key-detail-label">Обновлен</div>
+                        <div class="key-detail-value">{{ key.updated_at|date:"d.m.Y H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-key"></i>
+                <p>Нет добавленных API ключей</p>
+                <p style="font-size: 13px; margin-top: 10px;">Нажмите "Добавить ключ" для создания нового</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i>
+            <p>
+                <strong>Google Vision API:</strong> Вставьте ваш API ключ от Google Cloud Console.
+                Это обеспечит лучшее качество распознавания текста. Если ключ не указан, будет использоваться Tesseract OCR.
+                <br><br>
+                <strong>Как получить ключ:</strong> Перейдите в Google Cloud Console → APIs & Services → Credentials → Create Credentials → API Key
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Key Modal -->
+<div id="keyModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle"><i class="fas fa-key"></i> Добавить API ключ</h2>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="keyForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" id="formAction" value="create_key">
+                <input type="hidden" name="key_id" id="keyId" value="">
+
+                <div class="form-group">
+                    <label class="form-label" for="keyName">Название ключа *</label>
+                    <input type="text" class="form-control" id="keyName" name="name" required placeholder="Например: Google Vision API">
+                    <div class="form-help">Уникальное название для идентификации ключа</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="keyType">Тип ключа *</label>
+                    <select class="form-control" id="keyType" name="key_type" required>
+                        <option value="google_vision" selected>Google Vision API</option>
+                        <option value="openai">OpenAI (ChatGPT-4 Vision)</option>
+                        <option value="other">Другой API ключ</option>
+                    </select>
+                    <div class="form-help">Выберите тип API ключа</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="apiKey">API ключ *</label>
+                    <textarea class="form-control" id="apiKey" name="api_key" rows="4" placeholder="Вставьте ваш API ключ от Google Vision API" required></textarea>
+                    <div class="form-help">Просто вставьте ваш API ключ. Например: AIzaSyD0FPltRCTqaIUjlHo8p2TsrS1XgoJvnkg</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="keyDescription">Описание</label>
+                    <textarea class="form-control" id="keyDescription" name="description" rows="2" placeholder="Опциональное описание ключа"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" name="is_active" id="keyActive" checked style="width: auto;">
+                        <span class="form-label" style="margin: 0;">Активен</span>
+                    </label>
+                    <div class="form-help">Неактивные ключи не будут использоваться</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        Отмена
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const keysData = {
+        {% for key in api_keys %}
+        {{ key.id }}: {
+            id: {{ key.id }},
+            name: "{{ key.name }}",
+            key_type: "{{ key.key_type }}",
+            api_key: "{{ key.api_key|default:'' }}",
+            description: "{{ key.description|default:'' }}",
+            is_active: {{ key.is_active|lower }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+
+    function showAddKeyModal() {
+        document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus"></i> Добавить API ключ';
+        document.getElementById('formAction').value = 'create_key';
+        document.getElementById('keyId').value = '';
+        document.getElementById('keyForm').reset();
+        document.getElementById('keyActive').checked = true;
+        document.getElementById('keyModal').classList.add('show');
+    }
+
+    function editKey(keyId) {
+        const key = keysData[keyId];
+        if (!key) return;
+
+        document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Редактировать API ключ';
+        document.getElementById('formAction').value = 'update_key';
+        document.getElementById('keyId').value = key.id;
+        document.getElementById('keyName').value = key.name;
+        document.getElementById('keyType').value = key.key_type;
+        document.getElementById('apiKey').value = key.api_key || '';
+        document.getElementById('keyDescription').value = key.description || '';
+        document.getElementById('keyActive').checked = key.is_active;
+        
+        document.getElementById('keyModal').classList.add('show');
+    }
+
+    function deleteKey(keyId) {
+        if (!confirm('Вы уверены, что хотите удалить этот ключ?')) return;
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.innerHTML = `
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_key">
+            <input type="hidden" name="key_id" value="${keyId}">
+        `;
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function closeModal() {
+        document.getElementById('keyModal').classList.remove('show');
+    }
+
+    // Закрытие модального окна при клике вне его
+    window.onclick = function(event) {
+        const modal = document.getElementById('keyModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    // Закрытие модального окна по Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+</script>
+{% endblock %}

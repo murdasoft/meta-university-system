@@ -1,0 +1,43 @@
+from django.urls import path
+
+from .views_portal import (
+    MetaPkoDashboardView,
+    MetaPkoLoginView,
+    MetaPkoLogoutView,
+    QuickAddBuildingView,
+    QuickAddCalendarEventView,
+    QuickAddClassSessionView,
+    QuickAddContactEntryView,
+    QuickAddCourseView,
+    QuickAddDepartmentView,
+    QuickAddFaqView,
+    QuickAddMenuItemView,
+    QuickAddNewsPostView,
+    QuickAddOutletView,
+    QuickAddRoomView,
+    QuickAddStudyGroupView,
+    QuickAddStudyProgramView,
+    QuickAddTeacherView,
+    metapko_portal_index,
+)
+
+urlpatterns = [
+    path('', metapko_portal_index, name='metapko-index'),
+    path('login/', MetaPkoLoginView.as_view(), name='metapko-login'),
+    path('logout/', MetaPkoLogoutView.as_view(), name='metapko-logout'),
+    path('dashboard/', MetaPkoDashboardView.as_view(), name='metapko-dashboard'),
+    path('add/department/', QuickAddDepartmentView.as_view(), name='metapko-add-department'),
+    path('add/teacher/', QuickAddTeacherView.as_view(), name='metapko-add-teacher'),
+    path('add/program/', QuickAddStudyProgramView.as_view(), name='metapko-add-program'),
+    path('add/study-group/', QuickAddStudyGroupView.as_view(), name='metapko-add-study-group'),
+    path('add/building/', QuickAddBuildingView.as_view(), name='metapko-add-building'),
+    path('add/room/', QuickAddRoomView.as_view(), name='metapko-add-room'),
+    path('add/course/', QuickAddCourseView.as_view(), name='metapko-add-course'),
+    path('add/session/', QuickAddClassSessionView.as_view(), name='metapko-add-session'),
+    path('add/calendar/', QuickAddCalendarEventView.as_view(), name='metapko-add-calendar'),
+    path('add/news/', QuickAddNewsPostView.as_view(), name='metapko-add-news'),
+    path('add/contact/', QuickAddContactEntryView.as_view(), name='metapko-add-contact'),
+    path('add/faq/', QuickAddFaqView.as_view(), name='metapko-add-faq'),
+    path('add/outlet/', QuickAddOutletView.as_view(), name='metapko-add-outlet'),
+    path('add/menu-item/', QuickAddMenuItemView.as_view(), name='metapko-add-menu-item'),
+]

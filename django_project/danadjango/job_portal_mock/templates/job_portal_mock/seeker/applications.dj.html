@@ -1,0 +1,23 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Мои отклики{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/seeker_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Мои отклики</h1>
+    <p class="mock-page-lead">Список с статусами.</p>
+    <div class="mock-table-wrap">
+      <table class="mock-table">
+        <thead>
+          <tr><th>Вакансия</th><th>Компания</th><th>Дата</th><th>Статус</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Инженер ПО</td><td>ТОО «Дана»</td><td>18.03</td><td><span class="mock-badge">На рассмотрении</span></td></tr>
+          <tr><td>Аналитик</td><td>ИП «Степь»</td><td>10.03</td><td><span class="mock-badge mock-badge--neutral">Отказ</span></td></tr>
+          <tr><td>Team Lead</td><td>АО «Шын»</td><td>02.03</td><td><span class="mock-badge">Приглашение</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<section class="mock-hero mock-hero--splash">
+  <h1>Найдите работу по сфере</h1>
+  <p>Демо-каталог: <strong>{{ vacancy_total }}</strong> вакансий в <strong>{{ filter_categories|length }}</strong> направлениях. Фильтры по формату работы и занятости — на странице «Вакансии».</p>
+  <form class="mock-search" method="get" action="{% url 'job_portal_mock:vacancies' %}">
+    <input type="search" name="q" placeholder="Должность, навык, компания" aria-label="Поиск" value="">
+    <input type="text" name="city" placeholder="Город или регион" aria-label="Город" value="" list="mock-cities-home">
+    <button type="submit" class="mock-btn mock-btn--primary">Найти</button>
+  </form>
+  <datalist id="mock-cities-home">
+    {% for city in unique_cities %}
+    <option value="{{ city }}">
+    {% endfor %}
+  </datalist>
+</section>
+
+<h2 class="mock-section-title mock-section-title--decor">Сферы и количество вакансий</h2>
+<div class="mock-categories mock-categories--rich">
+  {% for c in filter_categories %}
+  <a class="mock-chip mock-chip--sector{% if not c.count %} mock-chip--empty{% endif %}" style="--chip-accent: {{ c.color }};" href="{% url 'job_portal_mock:vacancies' %}?cat={{ c.key }}">
+    <span class="mock-chip__label">{{ c.label }}</span>
+    <span class="mock-chip__count">{{ c.count }}</span>
+  </a>
+  {% endfor %}
+</div>
+
+<h2 class="mock-section-title mock-section-title--decor">Свежие вакансии</h2>
+<p class="mock-page-lead mock-page-lead--tight"><a href="{% url 'job_portal_mock:vacancies' %}">Открыть полный каталог ({{ vacancy_total }})</a></p>
+<div class="mock-job-list">
+  {% for job in vacancies_preview %}
+  <a href="{% url 'job_portal_mock:vacancy_detail' job.slug %}" class="mock-job-card mock-job-card--rich" style="--card-accent: {{ job.accent_color }};">
+    <div class="mock-job-card__row">
+      <span class="mock-job-card__sector">{{ job.cat_label }}</span>
+      <time class="mock-job-card__date" datetime="">{{ job.posted }}</time>
+    </div>
+    <p class="mock-job-card__title">{{ job.title }}</p>
+    <p class="mock-job-card__meta">{{ job.company }} · {{ job.city }} · {{ job.salary }}</p>
+    <p class="mock-job-card__foot">{{ job.format }} · {{ job.employment }}</p>
+  </a>
+  {% endfor %}
+</div>
+
+<section class="mock-about mock-about--accent">
+  <h2>О демо-платформе</h2>
+  <p>Войдите как <strong>seeker</strong> или <strong>employer</strong> (пароль <strong>demo123</strong>) или зарегистрируйте тестовый аккаунт — шапка и кабинет подставят ваше имя. Отклики и сохранение вакансий остаются визуальным макетом.</p>
+</section>
+{% endblock %}

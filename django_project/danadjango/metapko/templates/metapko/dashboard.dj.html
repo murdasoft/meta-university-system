@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд — IIKO · Meta-университет</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg0: #0a1018;
+            --bg1: #121c28;
+            --accent: #4ecdc4;
+            --accent2: #ff6b6b;
+            --text: #eef4f8;
+            --muted: #8b9aaf;
+            --card: rgba(18, 32, 48, 0.82);
+            --border: rgba(78, 205, 196, 0.22);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "DM Sans", system-ui, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse 80% 50% at 15% 10%, rgba(78, 205, 196, 0.12), transparent),
+                radial-gradient(ellipse 60% 40% at 90% 90%, rgba(255, 107, 107, 0.08), transparent),
+                linear-gradient(165deg, var(--bg0), var(--bg1));
+            color: var(--text);
+            padding: 1.25rem 1.5rem 2rem;
+        }
+        .wrap { max-width: 960px; margin: 0 auto; }
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(1.35rem, 4vw, 1.75rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .tagline {
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.55;
+            max-width: 36rem;
+            margin-top: 0.5rem;
+        }
+        .user { color: var(--muted); font-size: 0.88rem; margin-top: 0.35rem; }
+        .actions button {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font: inherit;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.1rem;
+        }
+        .stat .num {
+            font-family: "Syne", sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .stat .lbl { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.25rem; }
+        .badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+        .badge.ok { background: rgba(78, 205, 196, 0.2); color: var(--accent); }
+        .badge.off { background: rgba(255, 107, 107, 0.15); color: #ff9a9a; }
+        main {
+            display: grid;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            main { grid-template-columns: repeat(2, 1fr); }
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem 1.15rem;
+        }
+        .card h2 {
+            font-family: "Syne", sans-serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+        .card p, .card li { color: var(--muted); font-size: 0.88rem; line-height: 1.55; margin-bottom: 0.65rem; }
+        .card ul { margin-left: 1.1rem; margin-bottom: 0.5rem; }
+        .card code { color: var(--accent); font-size: 0.82rem; }
+        .card a.btn {
+            display: inline-block;
+            padding: 0.45rem 0.85rem;
+            background: rgba(78, 205, 196, 0.18);
+            color: var(--accent);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.86rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+        .card a.btn:hover { background: rgba(78, 205, 196, 0.28); }
+        .card.wide { grid-column: 1 / -1; }
+        .mini { font-size: 0.8rem; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { text-align: left; padding: 0.4rem 0.5rem 0.4rem 0; border-bottom: 1px solid rgba(139, 154, 175, 0.2); }
+        th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        .flash {
+            background: rgba(78, 205, 196, 0.15);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.88rem;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <div>
+                <h1>{{ portal_title }}</h1>
+                <p class="tagline">{{ portal_tagline }}</p>
+                <p class="user">Вы вошли как <strong>{{ user.username }}</strong></p>
+                {% if metapko_enabled %}
+                <span class="badge ok">API-слой включён (METAPKO_ENABLED)</span>
+                {% else %}
+                <span class="badge off">API-слой выключен</span>
+                {% endif %}
+            </div>
+            <div class="actions">
+                <form action="{% url 'metapko-logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Выйти</button>
+                </form>
+            </div>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+            <p class="flash">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <section class="stats" aria-label="Сводка API">
+            <div class="stat">
+                <div class="num">{{ clients_total }}</div>
+                <div class="lbl">Клиентов API</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ clients_active }}</div>
+                <div class="lbl">Активных ключей</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="font-size:0.95rem; color:var(--muted); word-break:break-all;">{{ api_key_header }}</div>
+                <div class="lbl">Заголовок ключа</div>
+            </div>
+        </section>
+
+        <section class="stats" aria-label="Данные в БД" style="margin-top:0.5rem">
+            <div class="stat">
+                <div class="num">{{ stat_teachers }}</div>
+                <div class="lbl">Преподавателей</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_courses }}</div>
+                <div class="lbl">Курсов</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_sessions }}</div>
+                <div class="lbl">Занятий</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_faq }}</div>
+                <div class="lbl">FAQ</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_outlets }}</div>
+                <div class="lbl">Точек IIKO</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_menu }}</div>
+                <div class="lbl">Позиций меню</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_orders }}</div>
+                <div class="lbl">Заказов</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_tickets }}</div>
+                <div class="lbl">Заявок (открытых)</div>
+            </div>
+        </section>
+
+        <section class="stats" aria-label="Справочники вуза" style="margin-top:0.5rem">
+            <div class="stat">
+                <div class="num">{{ stat_programs }}</div>
+                <div class="lbl">Программ</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_groups }}</div>
+                <div class="lbl">Групп</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_buildings }}</div>
+                <div class="lbl">Корпусов</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_rooms }}</div>
+                <div class="lbl">Аудиторий</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_calendar }}</div>
+                <div class="lbl">Событий календаря</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_news }}</div>
+                <div class="lbl">Новостей</div>
+            </div>
+            <div class="stat">
+                <div class="num">{{ stat_contacts }}</div>
+                <div class="lbl">Контактов</div>
+            </div>
+        </section>
+
+        {% if last_client_used %}
+        <p class="mini" style="margin-bottom:1rem;">Последнее обращение к API: <strong>{{ last_client_used.name }}</strong>
+            {% if last_client_used.last_used_at %} — {{ last_client_used.last_used_at|date:"d.m.Y H:i" }}{% endif %}
+        </p>
+        {% endif %}
+
+        <main>
+            <div class="card wide">
+                <h2>Быстрое добавление данных</h2>
+                <p>Записи сразу попадают в <code>/api/metapko/v1/</code> и в Telegram-бот (см. <code>документация/09_TELEGRAM_IIKO_METAPKO.md</code>): <code>/programs</code>, <code>/groups</code>, <code>/rooms</code>, <code>/calendar</code>, <code>/news</code>, <code>/contacts</code>, <code>/teachers</code>, <code>/sessions</code>, <code>/faq</code>.</p>
+                <p class="mini" style="margin-bottom:0.75rem;">Массовое наполнение: <code>python manage.py seed_metapko_bulk --clear</code>.</p>
+                <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+                    <a class="btn" href="{% url 'metapko-add-department' %}">Кафедра</a>
+                    <a class="btn" href="{% url 'metapko-add-teacher' %}">Преподаватель</a>
+                    <a class="btn" href="{% url 'metapko-add-program' %}">Программа</a>
+                    <a class="btn" href="{% url 'metapko-add-study-group' %}">Группа</a>
+                    <a class="btn" href="{% url 'metapko-add-building' %}">Корпус</a>
+                    <a class="btn" href="{% url 'metapko-add-room' %}">Аудитория</a>
+                    <a class="btn" href="{% url 'metapko-add-course' %}">Курс</a>
+                    <a class="btn" href="{% url 'metapko-add-session' %}">Занятие</a>
+                    <a class="btn" href="{% url 'metapko-add-calendar' %}">Календарь</a>
+                    <a class="btn" href="{% url 'metapko-add-news' %}">Новость</a>
+                    <a class="btn" href="{% url 'metapko-add-contact' %}">Контакт</a>
+                    <a class="btn" href="{% url 'metapko-add-faq' %}">FAQ</a>
+                    <a class="btn" href="{% url 'metapko-add-outlet' %}">Точка IIKO</a>
+                    <a class="btn" href="{% url 'metapko-add-menu-item' %}">Меню</a>
+                </div>
+            </div>
+
+            <div class="card wide">
+                <h2>Клиенты интеграции (IIKO → внешние сервисы)</h2>
+                {% if recent_clients %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Статус</th>
+                            <th>Создан</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in recent_clients %}
+                        <tr>
+                            <td>{{ c.name }}</td>
+                            <td>{% if c.is_active %}активен{% else %}выкл.{% endif %}</td>
+                            <td>{{ c.created_at|date:"d.m.Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p class="mini">Полный список и выпуск ключей — в админке.</p>
+                {% else %}
+                <p>Пока нет клиентов. Создайте первого в <strong>meta-admin</strong> → «Клиенты интеграции» (например, «Telegram-бот» или «Портал Meta-университета»).</p>
+                {% endif %}
+                <a class="btn" href="/meta-admin/metapko/integrationclient/">Открыть клиентов в админке</a>
+            </div>
+
+            <div class="card">
+                <h2>Админка</h2>
+                <p>Управление клиентами и ключами API для бота и внешних систем.</p>
+                <a class="btn" href="/meta-admin/">meta-admin</a>
+            </div>
+
+            <div class="card">
+                <h2>Документация API</h2>
+                <p>REST <code>/api/metapko/v1/</code>: программы, группы, корпуса, аудитории, календарь, новости, контакты, кафедры, преподаватели, курсы, занятия, FAQ, IIKO, заказы, заявки (ключ в заголовке).</p>
+                <a class="btn" href="/meta-swagger/">meta-swagger</a>
+            </div>
+
+            <div class="card">
+                <h2>Проверка</h2>
+                <p><code>GET /api/metapko/v1/health/</code></p>
+                <a class="btn" href="/api/metapko/v1/health/">health</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

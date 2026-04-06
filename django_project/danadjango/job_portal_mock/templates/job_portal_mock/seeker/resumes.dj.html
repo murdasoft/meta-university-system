@@ -1,0 +1,23 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Мои резюме{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/seeker_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Мои резюме</h1>
+    <p class="mock-page-lead">Создание и редактирование (макет).</p>
+    <p class="mock-hint">Кнопки «Создать» / «Редактировать» в реальной системе открывали бы форму или редактор.</p>
+    <div class="mock-list-cards">
+      <div class="mock-card">
+        <p class="mock-card__title">Резюме «Backend-разработчик»</p>
+        <p class="mock-card__text">Обновлено 12.03.2026 · статус: опубликовано <span class="mock-badge">активно</span></p>
+      </div>
+      <div class="mock-card">
+        <p class="mock-card__title">Черновик «Аналитик данных»</p>
+        <p class="mock-card__text">Не заполнено на 40% <span class="mock-badge mock-badge--neutral">черновик</span></p>
+      </div>
+    </div>
+    <p style="margin-top:1rem;"><span class="mock-btn mock-btn--primary">+ Новое резюме</span></p>
+  </div>
+</div>
+{% endblock %}

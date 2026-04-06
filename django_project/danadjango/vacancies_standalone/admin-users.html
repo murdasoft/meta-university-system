@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef2f0">
+  <script src="js/theme.js"></script>
+  <title>Администрирование — пользователи</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="mock-job" data-page="admin" data-require-role="admin">
+  <header class="mock-topbar">
+    <div class="mock-topbar__inner">
+      <a class="mock-brand" href="index.html">Портал вакансий</a>
+      <div class="mock-top-actions" id="top-actions"></div>
+    </div>
+  </header>
+  <div class="mock-demo-strip">
+    <div class="mock-demo-strip__inner">
+      <div class="mock-demo-nav-scroll">
+        <nav class="mock-demo-nav" aria-label="Основные разделы">
+          <a href="index.html" class="mock-nav-item">Главная</a>
+          <a href="vacancies.html" class="mock-nav-item">Вакансии</a>
+          <a href="contacts.html" class="mock-nav-item">Контакты</a>
+          <a href="seeker-dashboard.html" class="mock-nav-item">Соискатель</a>
+          <a href="employer-dashboard.html" class="mock-nav-item">Работодатель</a>
+          <a href="admin-users.html" class="mock-nav-item">Админ-панель</a>
+          <a href="login.html" class="mock-nav-item" id="nav-auth-link">Вход / Регистрация</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <main class="mock-main">
+    <div class="mock-portal">
+      <aside class="mock-side-nav" aria-label="Администрирование">
+        <a href="admin-users.html" class="is-active">Пользователи</a>
+        <span class="mock-side-nav__stub">Модерация</span>
+        <span class="mock-side-nav__stub">Справочники</span>
+        <span class="mock-side-nav__stub">Статистика и отчёты</span>
+        <span class="mock-side-nav__stub">Настройки системы</span>
+      </aside>
+      <div>
+        <h1 class="mock-page-title">Управление пользователями</h1>
+        <p class="mock-page-lead">Сеанс: <strong data-mock-user-display></strong>. Таблица ниже предназначена для просмотра списка учётных записей, ролей и статусов модерации.</p>
+        <div class="mock-table-wrap">
+          <table class="mock-table">
+            <thead>
+              <tr><th>Пользователь</th><th>Роль</th><th>Статус</th><th>Регистрация</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>user_01</td><td>Соискатель</td><td><span class="mock-badge">активен</span></td><td>12.02.2026</td></tr>
+              <tr><td>hr_demo</td><td>Работодатель</td><td><span class="mock-badge">активен</span></td><td>05.01.2026</td></tr>
+              <tr><td>spam_test</td><td>Соискатель</td><td><span class="mock-badge mock-badge--neutral">заблокирован</span></td><td>01.03.2026</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="mock-footer mock-footer--site" data-site-footer aria-label="Подвал сайта"></footer>
+  <script src="js/i18n.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/portal-guard.js"></script>
+</body>
+</html>

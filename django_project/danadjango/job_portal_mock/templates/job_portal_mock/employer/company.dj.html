@@ -1,0 +1,26 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Настройки компании{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/employer_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Настройки компании</h1>
+    <p class="mock-page-lead">Реквизиты, описание, логотип, контакты HR.</p>
+    <form class="mock-form" action="#" onsubmit="return false;">
+      <div>
+        <label for="co">Название</label>
+        <input id="co" type="text" value="{{ mock_user.display|default:'ТОО «Демо Компания»' }}" readonly>
+      </div>
+      <div>
+        <label for="bin">БИН</label>
+        <input id="bin" type="text" value="123456789012" readonly>
+      </div>
+      <div>
+        <label for="desc">О компании</label>
+        <textarea id="desc" readonly>Краткое описание для карточки работодателя на платформе.</textarea>
+      </div>
+      <span class="mock-btn mock-btn--primary">Сохранить</span>
+    </form>
+  </div>
+</div>
+{% endblock %}

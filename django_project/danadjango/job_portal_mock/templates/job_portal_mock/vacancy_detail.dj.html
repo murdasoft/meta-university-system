@@ -1,0 +1,23 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<article class="mock-detail">
+  <p class="mock-detail__back"><a href="{% url 'job_portal_mock:vacancies' %}">← К списку вакансий</a></p>
+  <div class="mock-detail__badge" style="--card-accent: {{ job.accent_color }};">{{ job.cat_label }}</div>
+  <h1 class="mock-page-title">{{ job.title }}</h1>
+  <p class="mock-detail__company">{{ job.company }}</p>
+  <ul class="mock-detail__facts">
+    <li><strong>Локация и формат:</strong> {{ job.city }} · {{ job.format }}</li>
+    <li><strong>Занятость:</strong> {{ job.employment }}</li>
+    <li><strong>Оплата:</strong> {{ job.salary }}</li>
+    <li><strong>Опубликовано:</strong> {{ job.posted }}</li>
+  </ul>
+  <div class="mock-detail__tags">{% for t in job.tags %}<span class="mock-tag">{{ t }}</span>{% endfor %}</div>
+  <h2 class="mock-section-title mock-section-title--decor" style="margin-top:1.5rem;">Описание</h2>
+  <p class="mock-detail__body">{{ job.description }}</p>
+  <div class="mock-detail__actions">
+    <span class="mock-btn mock-btn--primary" title="Макет: без реального отклика">Откликнуться</span>
+    <span class="mock-btn" title="Макет">Сохранить</span>
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,8 @@
+<aside class="mock-side-nav" aria-label="Меню соискателя">
+  <a href="{% url 'job_portal_mock:seeker_dashboard' %}" class="{% if active == 'seeker_dash' %}is-active{% endif %}">Дашборд</a>
+  <a href="{% url 'job_portal_mock:seeker_resumes' %}" class="{% if active == 'seeker_resumes' %}is-active{% endif %}">Мои резюме</a>
+  <a href="{% url 'job_portal_mock:seeker_applications' %}" class="{% if active == 'seeker_apps' %}is-active{% endif %}">Мои отклики</a>
+  <a href="{% url 'job_portal_mock:seeker_saved' %}" class="{% if active == 'seeker_saved' %}is-active{% endif %}">Сохранённые вакансии</a>
+  <a href="{% url 'job_portal_mock:seeker_settings' %}" class="{% if active == 'seeker_settings' %}is-active{% endif %}">Настройки профиля</a>
+  <a href="{% url 'job_portal_mock:seeker_notifications' %}" class="{% if active == 'seeker_notif' %}is-active{% endif %}">Уведомления</a>
+</aside>

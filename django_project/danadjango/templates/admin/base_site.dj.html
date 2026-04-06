@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Qazaqdana OCR - Админ-панель{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}" style="color: #667eea; font-weight: 700;">
+        Qazaqdana OCR
+    </a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* Кастомизация админ-панели */
+    #header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    #branding h1, #branding h1 a:link, #branding h1 a:visited {
+        color: white !important;
+    }
+    
+    div.breadcrumbs {
+        background: #f8f9fa;
+        border-bottom: 1px solid #e1e8ed;
+    }
+    
+    .module h2, .module caption, .inline-group h2 {
+        background: #667eea;
+    }
+    
+    a:link, a:visited {
+        color: #667eea;
+    }
+    
+    .button, input[type=submit], input[type=button], .submit-row input, button {
+        background: #667eea;
+        border: none;
+    }
+    
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, button:hover {
+        background: #5568d3;
+    }
+    
+    .calendar-shortcuts a {
+        color: #667eea;
+    }
+    
+    #changelist-filter li.selected a {
+        color: #667eea;
+    }
+</style>
+{% endblock %}

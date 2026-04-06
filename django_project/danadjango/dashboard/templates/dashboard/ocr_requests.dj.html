@@ -1,0 +1,324 @@
+{% extends 'base.dj.html' %}
+
+{% block title %}OCR Запросы - Qazaq Dana{% endblock %}
+
+{% block page_title %}OCR Запросы{% endblock %}
+{% block breadcrumb %}OCR Запросы{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-card h3 {
+        font-size: 14px;
+        color: var(--text-light);
+        margin-bottom: 10px;
+    }
+
+    .stat-card .value {
+        font-size: 32px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--primary-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .requests-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .table-header {
+        padding: 20px;
+        border-bottom: 2px solid var(--light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .table-header h2 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        border: 2px solid var(--light);
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+    }
+
+    .table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .table thead {
+        background: var(--light);
+    }
+
+    .table th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .table td {
+        padding: 15px;
+        border-bottom: 1px solid var(--light);
+    }
+
+    .table tbody tr {
+        transition: all 0.3s;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(52, 152, 219, 0.05);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-completed {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+    }
+
+    .status-processing {
+        background: rgba(243, 156, 18, 0.1);
+        color: var(--warning);
+    }
+
+    .status-failed {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger);
+    }
+
+    .status-pending {
+        background: rgba(52, 152, 219, 0.1);
+        color: var(--primary);
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .user-avatar-small {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-lighter));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    .language-flag {
+        font-size: 20px;
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        border: none;
+        background: var(--primary-light);
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s;
+    }
+
+    .action-btn:hover {
+        background: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .filter-buttons {
+            flex-wrap: wrap;
+        }
+
+        .table-header {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="stats-row">
+    <div class="stat-card">
+        <h3>Всего запросов</h3>
+        <div class="value">{{ total_count }}</div>
+    </div>
+    {% for stat in status_stats %}
+    <div class="stat-card">
+        <h3>{{ stat.status|title }}</h3>
+        <div class="value">{{ stat.count }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="requests-table">
+    <div class="table-header">
+        <h2>📋 Все запросы</h2>
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterRequests('all')">Все</button>
+            <button class="filter-btn" onclick="filterRequests('completed')">Завершено</button>
+            <button class="filter-btn" onclick="filterRequests('processing')">В процессе</button>
+            <button class="filter-btn" onclick="filterRequests('failed')">Ошибка</button>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Пользователь</th>
+                    <th>Язык</th>
+                    <th>Статус</th>
+                    <th>Изображение</th>
+                    <th>Дата</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests_list %}
+                <tr data-status="{{ request.status }}">
+                    <td><strong>#{{ request.id }}</strong></td>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar-small">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                            <span>{{ request.user.username }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="language-flag">
+                            {% if request.language.code == 'ru' %}🇷🇺
+                            {% elif request.language.code == 'kk' %}🇰🇿
+                            {% elif request.language.code == 'en' %}🇬🇧
+                            {% else %}🌐{% endif %}
+                        </span>
+                        {{ request.language.name }}
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ request.status }}">
+                            {{ request.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if request.image %}
+                        <a href="{{ request.image.url }}" target="_blank">
+                            <i class="fas fa-image"></i> Просмотр
+                        </a>
+                        {% else %}
+                        <span style="color: var(--text-light);">Нет</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ request.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewDetails({{ request.id }})">
+                            <i class="fas fa-eye"></i> Детали
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; opacity: 0.3;"></i>
+                        <p>Нет OCR запросов</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterRequests(status) {
+        const rows = document.querySelectorAll('tbody tr[data-status]');
+        const buttons = document.querySelectorAll('.filter-btn');
+        
+        // Update active button
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Filter rows
+        rows.forEach(row => {
+            if (status === 'all' || row.dataset.status === status) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+    
+    function viewDetails(requestId) {
+        // Здесь можно добавить модальное окно с деталями
+        alert('Детали запроса #' + requestId);
+    }
+</script>
+{% endblock %}

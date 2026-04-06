@@ -1,0 +1,21 @@
+{% extends "job_portal_mock/base.dj.html" %}
+{% block title %}Админ — статистика{% endblock %}
+{% block content %}
+<div class="mock-portal">
+  {% include "job_portal_mock/partials/admin_nav.dj.html" %}
+  <div>
+    <h1 class="mock-page-title">Статистика и отчёты</h1>
+    <p class="mock-page-lead">Агрегированные показатели платформы (макет).</p>
+    <div class="mock-stats">
+      <div class="mock-stat"><div class="mock-stat__val">12.4k</div><div class="mock-stat__label">Вакансий за квартал</div></div>
+      <div class="mock-stat"><div class="mock-stat__val">38k</div><div class="mock-stat__label">Откликов</div></div>
+      <div class="mock-stat"><div class="mock-stat__val">92%</div><div class="mock-stat__label">Время модерации &lt; 24ч</div></div>
+    </div>
+    <div class="mock-card">
+      <p class="mock-card__title">Экспорт</p>
+      <p class="mock-card__text">В реальной панели: выгрузка CSV / Excel за период, фильтры по региону и отрасли.</p>
+      <p style="margin-top:0.75rem;"><span class="mock-btn">Сформировать отчёт</span></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
