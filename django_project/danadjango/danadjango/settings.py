@@ -218,6 +218,17 @@ from .metapko_settings import (
     METAPKO_PORTAL_HINT_PASSWORD,
 )
 
-# Vercel Read-Only Filesystem Fixes
+# Vercel Read-Only Filesystem & HTTPS Fixes
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 CSRF_USE_SESSIONS = False
+
+# CSRF & Security for Vercel Domains
+CSRF_TRUSTED_ORIGINS = [
+    'https://meta-university-system.vercel.app',
+    'https://*.vercel.app'
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
