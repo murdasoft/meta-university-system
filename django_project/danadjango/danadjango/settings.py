@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django_filters',
     
     # Local apps
-    'accounts',
+    'accounts.apps.AccountsConfig',
     'ocr',
     'dashboard',
     'storage',
