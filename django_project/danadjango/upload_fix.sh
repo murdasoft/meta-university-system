@@ -6,7 +6,7 @@ echo "Загружаем services.py на сервер..."
 # Используем expect для автоматического ввода пароля
 expect <<EOF
 set timeout 30
-spawn scp -P 22 ocr/services.py qazaqdana@109.248.32.73:/var/www/qazaqdana/ocr/
+spawn scp -P 22 ocr/services.py meta-university@109.248.32.73:/var/www/meta-university/ocr/
 expect {
     "password:" {
         send "Dd06092000%\r"
@@ -27,7 +27,7 @@ echo "Перезапускаем Gunicorn..."
 
 expect <<EOF
 set timeout 30
-spawn ssh -p 22 qazaqdana@109.248.32.73 "sudo systemctl restart gunicorn"
+spawn ssh -p 22 meta-university@109.248.32.73 "sudo systemctl restart gunicorn"
 expect {
     "password:" {
         send "Dd06092000%\r"

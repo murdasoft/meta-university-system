@@ -16,7 +16,7 @@ class Command(BaseCommand):
         except User.DoesNotExist:
             User.objects.create_superuser(
                 username='admin',
-                email='admin@qazaqdana.local',
+                email='admin@meta-university.local',
                 password='admin123',
                 role='admin',
                 first_name='Администратор',

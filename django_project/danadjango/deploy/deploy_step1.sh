@@ -20,21 +20,21 @@ apt-get install -y python3.12 python3.12-venv python3-pip postgresql postgresql-
 
 # Настройка PostgreSQL
 echo "🗄️ Настройка PostgreSQL..."
-sudo -u postgres psql -c "CREATE DATABASE qazaqdana_db;" || echo "База данных уже существует"
-sudo -u postgres psql -c "CREATE USER qazaqdana_user WITH PASSWORD 'QazaqDana2026!SecurePass';" || echo "Пользователь уже существует"
-sudo -u postgres psql -c "ALTER ROLE qazaqdana_user SET client_encoding TO 'utf8';"
-sudo -u postgres psql -c "ALTER ROLE qazaqdana_user SET default_transaction_isolation TO 'read committed';"
-sudo -u postgres psql -c "ALTER ROLE qazaqdana_user SET timezone TO 'Asia/Almaty';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE qazaqdana_db TO qazaqdana_user;"
+sudo -u postgres psql -c "CREATE DATABASE meta-university_db;" || echo "База данных уже существует"
+sudo -u postgres psql -c "CREATE USER meta-university_user WITH PASSWORD 'QazaqDana2026!SecurePass';" || echo "Пользователь уже существует"
+sudo -u postgres psql -c "ALTER ROLE meta-university_user SET client_encoding TO 'utf8';"
+sudo -u postgres psql -c "ALTER ROLE meta-university_user SET default_transaction_isolation TO 'read committed';"
+sudo -u postgres psql -c "ALTER ROLE meta-university_user SET timezone TO 'Asia/Almaty';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE meta-university_db TO meta-university_user;"
 
 # Создание пользователя для приложения
 echo "👤 Создание пользователя приложения..."
-useradd -m -s /bin/bash qazaqdana || echo "Пользователь уже существует"
+useradd -m -s /bin/bash meta-university || echo "Пользователь уже существует"
 
 # Создание директории проекта
 echo "📁 Создание директорий..."
-mkdir -p /var/www/qazaqdana
-chown qazaqdana:qazaqdana /var/www/qazaqdana
+mkdir -p /var/www/meta-university
+chown meta-university:meta-university /var/www/meta-university
 
 # Клонирование или копирование проекта
 echo "📥 Подготовка проекта..."
@@ -43,14 +43,14 @@ echo "📥 Подготовка проекта..."
 
 # Создание виртуального окружения
 echo "🐍 Создание виртуального окружения..."
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 python3.12 -m venv venv
-chown -R qazaqdana:qazaqdana venv
+chown -R meta-university:meta-university venv
 
 echo "=========================================="
 echo "✅ Базовая настройка завершена"
 echo "=========================================="
 echo ""
 echo "Следующие шаги:"
-echo "1. Загрузить файлы проекта в /var/www/qazaqdana/"
+echo "1. Загрузить файлы проекта в /var/www/meta-university/"
 echo "2. Запустить deploy_step2.sh"

@@ -5,19 +5,19 @@
       password: 'demo123',
       role: 'seeker',
       display: 'Айдар Нурланов',
-      email: 'seeker@demo.qazaqdana.kz',
+      email: 'seeker@demo.meta-university.kz',
     },
     employer: {
       password: 'demo123',
       role: 'employer',
       display: 'ТОО «Дана Демо»',
-      email: 'hr@demo.qazaqdana.kz',
+      email: 'hr@demo.meta-university.kz',
     },
     admin_demo: {
       password: 'demo123',
       role: 'admin',
       display: 'Администратор',
-      email: 'admin@demo.qazaqdana.kz',
+      email: 'admin@demo.meta-university.kz',
     },
   };
 

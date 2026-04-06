@@ -45,7 +45,7 @@ JWT (JSON Web Token) через заголовок `Authorization: Bearer <token
   "user": {
     "id": 1,
     "username": "admin",
-    "email": "admin@qazaqdana.kz",
+    "email": "admin@meta-university.kz",
     "role": "admin",
     "full_name": "Administrator"
   }
@@ -96,7 +96,7 @@ Authorization: Bearer <access_token>
   {
     "id": 1,
     "username": "admin",
-    "email": "admin@qazaqdana.kz",
+    "email": "admin@meta-university.kz",
     "role": "admin",
     "phone_number": "+7 777 123 4567",
     "is_active": true,
@@ -325,7 +325,7 @@ print(response.json())
     {
       "id": 1,
       "username": "admin",
-      "email": "admin@qazaqdana.kz",
+      "email": "admin@meta-university.kz",
       "requests_count": 45,
       "date_joined": "2026-02-11T04:42:00Z"
     }

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Сервер: создаёт клиента интеграции в БД и файл /var/www/qazaqdana/.env.telegram
+Сервер: создаёт клиента интеграции в БД и файл /var/www/meta-university/.env.telegram
 (токен и ключ не попадают в git).
 
 Запуск от root на сервере:
-  cd /var/www/qazaqdana
+  cd /var/www/meta-university
   export TELEGRAM_BOT_TOKEN='...'
   python deploy/setup_telegram_env.py
-  chown qazaqdana:www-data .env.telegram
+  chown meta-university:www-data .env.telegram
 """
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ def main() -> None:
         import grp
         import pwd
 
-        uid = pwd.getpwnam('qazaqdana').pw_uid
+        uid = pwd.getpwnam('meta-university').pw_uid
         gid = grp.getgrnam('www-data').gr_gid
         os.chown(env_path, uid, gid)
     except (KeyError, OSError):

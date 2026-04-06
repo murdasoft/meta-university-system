@@ -4,7 +4,7 @@
 
 ```bash
 # 1. Перейдите в папку проекта
-cd /Users/daniyarmukhtarov/Desktop/project/qazaqdana/danadjango
+cd /Users/daniyarmukhtarov/Desktop/project/meta-university/danadjango
 
 # 2. Сделайте скрипты исполняемыми
 chmod +x deploy/*.sh
@@ -38,21 +38,21 @@ ssh root@109.248.32.73
 
 ```bash
 # Создайте временную директорию
-mkdir -p /root/qazaqdana-deploy
-cd /root/qazaqdana-deploy
+mkdir -p /root/meta-university-deploy
+cd /root/meta-university-deploy
 
 # Скачайте скрипты (вариант 1 - через git, если проект в репозитории)
 git clone <URL-вашего-репозитория> .
 
 # ИЛИ вариант 2 - загрузите файлы с локального компьютера
 # На ЛОКАЛЬНОМ компьютере выполните:
-# scp -r deploy/ root@109.248.32.73:/root/qazaqdana-deploy/
+# scp -r deploy/ root@109.248.32.73:/root/meta-university-deploy/
 ```
 
 ### Шаг 3: Запуск деплоя (на сервере)
 
 ```bash
-cd /root/qazaqdana-deploy
+cd /root/meta-university-deploy
 chmod +x deploy/*.sh
 
 # Запустите скрипты по порядку
@@ -64,7 +64,7 @@ bash deploy/deploy_step1.sh
 На ЛОКАЛЬНОМ компьютере:
 
 ```bash
-cd /Users/daniyarmukhtarov/Desktop/project/qazaqdana/danadjango
+cd /Users/daniyarmukhtarov/Desktop/project/meta-university/danadjango
 
 # Загрузка файлов через rsync
 rsync -avz --progress \
@@ -74,14 +74,14 @@ rsync -avz --progress \
     --exclude='.git' \
     --exclude='db.sqlite3' \
     --exclude='media/*' \
-    root@109.248.32.73:/var/www/qazaqdana/
+    root@109.248.32.73:/var/www/meta-university/
 ```
 
 ### Шаг 5: Завершение установки (на сервере)
 
 ```bash
 ssh root@109.248.32.73
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 
 # Продолжение деплоя
 bash deploy/deploy_step2.sh
@@ -106,13 +106,13 @@ bash deploy/deploy_step3.sh
 
 ```bash
 # Статус приложения
-ssh root@109.248.32.73 'systemctl status qazaqdana'
+ssh root@109.248.32.73 'systemctl status meta-university'
 
 # Просмотр логов
-ssh root@109.248.32.73 'journalctl -u qazaqdana -f'
+ssh root@109.248.32.73 'journalctl -u meta-university -f'
 
 # Перезапуск приложения
-ssh root@109.248.32.73 'systemctl restart qazaqdana'
+ssh root@109.248.32.73 'systemctl restart meta-university'
 
 # Перезапуск Nginx
 ssh root@109.248.32.73 'systemctl restart nginx'
@@ -126,16 +126,16 @@ ssh root@109.248.32.73 'systemctl restart nginx'
 
 ```bash
 # 1. На локальном компьютере
-cd /Users/daniyarmukhtarov/Desktop/project/qazaqdana/danadjango
-rsync -avz --exclude='venv*' --exclude='__pycache__' --exclude='.git' ./ root@109.248.32.73:/var/www/qazaqdana/
+cd /Users/daniyarmukhtarov/Desktop/project/meta-university/danadjango
+rsync -avz --exclude='venv*' --exclude='__pycache__' --exclude='.git' ./ root@109.248.32.73:/var/www/meta-university/
 
 # 2. На сервере применить изменения
 ssh root@109.248.32.73 << 'EOF'
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 source venv/bin/activate
 python manage.py migrate
 python manage.py collectstatic --noinput
-systemctl restart qazaqdana
+systemctl restart meta-university
 EOF
 ```
 
@@ -147,24 +147,24 @@ EOF
 
 ```bash
 # Проверьте статус
-ssh root@109.248.32.73 'systemctl status qazaqdana nginx'
+ssh root@109.248.32.73 'systemctl status meta-university nginx'
 
 # Посмотрите логи
-ssh root@109.248.32.73 'tail -f /var/www/qazaqdana/logs/gunicorn-error.log'
+ssh root@109.248.32.73 'tail -f /var/www/meta-university/logs/gunicorn-error.log'
 ```
 
 ### Ошибка 502 Bad Gateway
 
 ```bash
 # Перезапустите сервисы
-ssh root@109.248.32.73 'systemctl restart qazaqdana nginx'
+ssh root@109.248.32.73 'systemctl restart meta-university nginx'
 ```
 
 ### Статика не загружается
 
 ```bash
 ssh root@109.248.32.73 << 'EOF'
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 source venv/bin/activate
 python manage.py collectstatic --noinput --clear
 systemctl restart nginx

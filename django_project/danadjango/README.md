@@ -42,7 +42,7 @@ danadjango/
 ### 1. Клонирование и настройка окружения
 
 ```bash
-cd /Users/daniyarmukhtarov/Desktop/project/qazaqdana/danadjango
+cd /Users/daniyarmukhtarov/Desktop/project/meta-university/danadjango
 source venv-danadjango/bin/activate
 ```
 
@@ -71,12 +71,12 @@ brew services start postgresql@14
 psql postgres
 
 # Создайте базу данных и пользователя
-CREATE DATABASE qazaqdana_db;
+CREATE DATABASE meta-university_db;
 CREATE USER postgres WITH PASSWORD 'postgres';
 ALTER ROLE postgres SET client_encoding TO 'utf8';
 ALTER ROLE postgres SET default_transaction_isolation TO 'read committed';
 ALTER ROLE postgres SET timezone TO 'Asia/Almaty';
-GRANT ALL PRIVILEGES ON DATABASE qazaqdana_db TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE meta-university_db TO postgres;
 \q
 ```
 
@@ -85,7 +85,7 @@ GRANT ALL PRIVILEGES ON DATABASE qazaqdana_db TO postgres;
 Файл `.env` уже создан со следующими параметрами:
 
 ```
-DB_NAME=qazaqdana_db
+DB_NAME=meta-university_db
 DB_USER=postgres
 DB_PASSWORD=postgres
 DB_HOST=localhost
@@ -197,7 +197,7 @@ curl -X POST http://localhost:8000/api/accounts/token/ \
   "user": {
     "id": 1,
     "username": "admin",
-    "email": "admin@qazaqdana.local",
+    "email": "admin@meta-university.local",
     "role": "admin"
   }
 }

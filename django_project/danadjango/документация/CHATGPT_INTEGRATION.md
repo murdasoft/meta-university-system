@@ -163,7 +163,7 @@ final response = await http.post(
 
 ### Как узнать, какой движок использовался?
 
-В логах сервера (`/var/www/qazaqdana/logs/gunicorn-error.log`):
+В логах сервера (`/var/www/meta-university/logs/gunicorn-error.log`):
 
 ```
 ✅ Google Vision: успешно (confidence: 0.95)

@@ -10,23 +10,23 @@ echo "=========================================="
 
 # Создание systemd сервиса для Gunicorn
 echo "⚙️ Создание Gunicorn сервиса..."
-cat > /etc/systemd/system/qazaqdana.service << 'EOF'
+cat > /etc/systemd/system/meta-university.service << 'EOF'
 [Unit]
 Description=Qazaq Dana Django Application
 After=network.target
 
 [Service]
 Type=notify
-User=qazaqdana
+User=meta-university
 Group=www-data
-WorkingDirectory=/var/www/qazaqdana
-Environment="PATH=/var/www/qazaqdana/venv/bin"
-ExecStart=/var/www/qazaqdana/venv/bin/gunicorn \
+WorkingDirectory=/var/www/meta-university
+Environment="PATH=/var/www/meta-university/venv/bin"
+ExecStart=/var/www/meta-university/venv/bin/gunicorn \
     --workers 3 \
-    --bind unix:/var/www/qazaqdana/gunicorn.sock \
+    --bind unix:/var/www/meta-university/gunicorn.sock \
     --timeout 120 \
-    --access-logfile /var/www/qazaqdana/logs/gunicorn-access.log \
-    --error-logfile /var/www/qazaqdana/logs/gunicorn-error.log \
+    --access-logfile /var/www/meta-university/logs/gunicorn-access.log \
+    --error-logfile /var/www/meta-university/logs/gunicorn-error.log \
     danadjango.wsgi:application
 
 [Install]
@@ -35,29 +35,29 @@ EOF
 
 # Настройка Nginx
 echo "🌐 Настройка Nginx..."
-cat > /etc/nginx/sites-available/qazaqdana << 'EOF'
+cat > /etc/nginx/sites-available/meta-university << 'EOF'
 server {
     listen 80;
-    server_name 109.248.32.73 qazaqdana.kz www.qazaqdana.kz;
+    server_name 109.248.32.73 meta-university.kz www.meta-university.kz;
 
     client_max_body_size 50M;
 
-    access_log /var/www/qazaqdana/logs/nginx-access.log;
-    error_log /var/www/qazaqdana/logs/nginx-error.log;
+    access_log /var/www/meta-university/logs/nginx-access.log;
+    error_log /var/www/meta-university/logs/nginx-error.log;
 
     location /static/ {
-        alias /var/www/qazaqdana/static/;
+        alias /var/www/meta-university/static/;
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
 
     location /media/ {
-        alias /var/www/qazaqdana/media/;
+        alias /var/www/meta-university/media/;
         expires 7d;
     }
 
     location / {
-        proxy_pass http://unix:/var/www/qazaqdana/gunicorn.sock;
+        proxy_pass http://unix:/var/www/meta-university/gunicorn.sock;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -69,7 +69,7 @@ server {
 EOF
 
 # Активация конфигурации Nginx
-ln -sf /etc/nginx/sites-available/qazaqdana /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/meta-university /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 
 # Тест конфигурации Nginx
@@ -85,16 +85,16 @@ echo "y" | ufw enable
 
 # Установка прав доступа
 echo "🔐 Установка прав доступа..."
-chown -R qazaqdana:www-data /var/www/qazaqdana
-chmod -R 755 /var/www/qazaqdana
-chmod -R 775 /var/www/qazaqdana/media
-chmod -R 775 /var/www/qazaqdana/logs
+chown -R meta-university:www-data /var/www/meta-university
+chmod -R 755 /var/www/meta-university
+chmod -R 775 /var/www/meta-university/media
+chmod -R 775 /var/www/meta-university/logs
 
 # Запуск сервисов
 echo "🚀 Запуск сервисов..."
 systemctl daemon-reload
-systemctl enable qazaqdana
-systemctl start qazaqdana
+systemctl enable meta-university
+systemctl start meta-university
 systemctl restart nginx
 
 echo "=========================================="
@@ -104,11 +104,11 @@ echo ""
 echo "🎉 Приложение доступно по адресу: http://109.248.32.73"
 echo ""
 echo "📋 Полезные команды:"
-echo "  - Перезапуск приложения: sudo systemctl restart qazaqdana"
-echo "  - Логи приложения: sudo journalctl -u qazaqdana -f"
-echo "  - Логи Gunicorn: tail -f /var/www/qazaqdana/logs/gunicorn-error.log"
-echo "  - Логи Nginx: tail -f /var/www/qazaqdana/logs/nginx-error.log"
-echo "  - Статус сервиса: sudo systemctl status qazaqdana"
+echo "  - Перезапуск приложения: sudo systemctl restart meta-university"
+echo "  - Логи приложения: sudo journalctl -u meta-university -f"
+echo "  - Логи Gunicorn: tail -f /var/www/meta-university/logs/gunicorn-error.log"
+echo "  - Логи Nginx: tail -f /var/www/meta-university/logs/nginx-error.log"
+echo "  - Статус сервиса: sudo systemctl status meta-university"
 echo ""
 echo "🔐 Учетные данные администратора:"
 echo "  URL: http://109.248.32.73/login/"

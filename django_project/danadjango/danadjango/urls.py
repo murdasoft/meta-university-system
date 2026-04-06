@@ -28,11 +28,11 @@ from metapko.admin_site import meta_pko_admin
 # Swagger/OpenAPI schema
 schema_view = get_schema_view(
     openapi.Info(
-        title="Qazaqdana OCR API",
+        title="Meta University API",
         default_version='v1',
         description="API для распознавания текста с изображений (русский, казахский, английский)",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@qazaqdana.local"),
+        contact=openapi.Contact(email="contact@meta-university.local"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,

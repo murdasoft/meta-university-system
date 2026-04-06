@@ -15,7 +15,7 @@
 
 ```bash
 # 1. Загрузка файлов на сервер
-cd /Users/daniyarmukhtarov/Desktop/project/qazaqdana/danadjango
+cd /Users/daniyarmukhtarov/Desktop/project/meta-university/danadjango
 chmod +x deploy/*.sh
 ./deploy/upload_to_server.sh
 
@@ -23,7 +23,7 @@ chmod +x deploy/*.sh
 ssh root@109.248.32.73
 
 # 3. Запуск деплоя (на сервере)
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 chmod +x deploy/*.sh
 bash deploy/deploy_step1.sh
 bash deploy/deploy_step2.sh
@@ -40,16 +40,16 @@ ssh root@109.248.32.73
 apt-get update
 apt-get install -y git
 cd /root
-git clone <your-repo-url> qazaqdana-temp
-cd qazaqdana-temp
+git clone <your-repo-url> meta-university-temp
+cd meta-university-temp
 
 # 3. Запуск деплоя
 chmod +x deploy/*.sh
 bash deploy/deploy_step1.sh
 
 # 4. Копирование файлов проекта
-cp -r . /var/www/qazaqdana/
-cd /var/www/qazaqdana
+cp -r . /var/www/meta-university/
+cd /var/www/meta-university
 
 # 5. Продолжение деплоя
 bash deploy/deploy_step2.sh
@@ -95,27 +95,27 @@ apt-get install -y \
 sudo -u postgres psql
 
 # В psql выполните:
-CREATE DATABASE qazaqdana_db;
-CREATE USER qazaqdana_user WITH PASSWORD 'QazaqDana2026!SecurePass';
-ALTER ROLE qazaqdana_user SET client_encoding TO 'utf8';
-ALTER ROLE qazaqdana_user SET default_transaction_isolation TO 'read committed';
-ALTER ROLE qazaqdana_user SET timezone TO 'Asia/Almaty';
-GRANT ALL PRIVILEGES ON DATABASE qazaqdana_db TO qazaqdana_user;
+CREATE DATABASE meta-university_db;
+CREATE USER meta-university_user WITH PASSWORD 'QazaqDana2026!SecurePass';
+ALTER ROLE meta-university_user SET client_encoding TO 'utf8';
+ALTER ROLE meta-university_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE meta-university_user SET timezone TO 'Asia/Almaty';
+GRANT ALL PRIVILEGES ON DATABASE meta-university_db TO meta-university_user;
 \q
 ```
 
 ### Шаг 5: Создание пользователя приложения
 
 ```bash
-useradd -m -s /bin/bash qazaqdana
+useradd -m -s /bin/bash meta-university
 ```
 
 ### Шаг 6: Загрузка проекта
 
 ```bash
 # Создание директории
-mkdir -p /var/www/qazaqdana
-cd /var/www/qazaqdana
+mkdir -p /var/www/meta-university
+cd /var/www/meta-university
 
 # Загрузка файлов (используйте один из методов):
 # - Git clone (если проект в репозитории)
@@ -126,7 +126,7 @@ cd /var/www/qazaqdana
 ### Шаг 7: Настройка Python окружения
 
 ```bash
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 python3.12 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
@@ -146,8 +146,8 @@ SECRET_KEY=your-secret-key-here
 DEBUG=False
 ALLOWED_HOSTS=109.248.32.73
 
-DB_NAME=qazaqdana_db
-DB_USER=qazaqdana_user
+DB_NAME=meta-university_db
+DB_USER=meta-university_user
 DB_PASSWORD=QazaqDana2026!SecurePass
 DB_HOST=localhost
 DB_PORT=5432
@@ -167,7 +167,7 @@ deactivate
 ### Шаг 10: Настройка Gunicorn (systemd)
 
 ```bash
-nano /etc/systemd/system/qazaqdana.service
+nano /etc/systemd/system/meta-university.service
 ```
 
 Содержимое (скопируйте из deploy_step3.sh)
@@ -175,13 +175,13 @@ nano /etc/systemd/system/qazaqdana.service
 ### Шаг 11: Настройка Nginx
 
 ```bash
-nano /etc/nginx/sites-available/qazaqdana
+nano /etc/nginx/sites-available/meta-university
 ```
 
 Содержимое (скопируйте из deploy_step3.sh)
 
 ```bash
-ln -s /etc/nginx/sites-available/qazaqdana /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/meta-university /etc/nginx/sites-enabled/
 rm /etc/nginx/sites-enabled/default
 nginx -t
 ```
@@ -198,18 +198,18 @@ ufw enable
 ### Шаг 13: Установка прав
 
 ```bash
-chown -R qazaqdana:www-data /var/www/qazaqdana
-chmod -R 755 /var/www/qazaqdana
-mkdir -p /var/www/qazaqdana/logs
-chmod -R 775 /var/www/qazaqdana/logs
+chown -R meta-university:www-data /var/www/meta-university
+chmod -R 755 /var/www/meta-university
+mkdir -p /var/www/meta-university/logs
+chmod -R 775 /var/www/meta-university/logs
 ```
 
 ### Шаг 14: Запуск сервисов
 
 ```bash
 systemctl daemon-reload
-systemctl enable qazaqdana
-systemctl start qazaqdana
+systemctl enable meta-university
+systemctl start meta-university
 systemctl restart nginx
 ```
 
@@ -218,7 +218,7 @@ systemctl restart nginx
 ### Проверка статуса сервисов
 
 ```bash
-systemctl status qazaqdana
+systemctl status meta-university
 systemctl status nginx
 systemctl status postgresql
 ```
@@ -227,14 +227,14 @@ systemctl status postgresql
 
 ```bash
 # Логи приложения
-journalctl -u qazaqdana -f
+journalctl -u meta-university -f
 
 # Логи Gunicorn
-tail -f /var/www/qazaqdana/logs/gunicorn-error.log
+tail -f /var/www/meta-university/logs/gunicorn-error.log
 
 # Логи Nginx
 tail -f /var/log/nginx/error.log
-tail -f /var/www/qazaqdana/logs/nginx-error.log
+tail -f /var/www/meta-university/logs/nginx-error.log
 ```
 
 ### Тест в браузере
@@ -249,19 +249,19 @@ tail -f /var/www/qazaqdana/logs/nginx-error.log
 
 ```bash
 # Перезапуск приложения
-systemctl restart qazaqdana
+systemctl restart meta-university
 
 # Остановка
-systemctl stop qazaqdana
+systemctl stop meta-university
 
 # Старт
-systemctl start qazaqdana
+systemctl start meta-university
 
 # Статус
-systemctl status qazaqdana
+systemctl status meta-university
 
 # Логи в реальном времени
-journalctl -u qazaqdana -f
+journalctl -u meta-university -f
 ```
 
 ## 🔄 Обновление приложения
@@ -272,7 +272,7 @@ journalctl -u qazaqdana -f
 
 # 2. На сервере
 ssh root@109.248.32.73
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 source venv/bin/activate
 
 # 3. Применить миграции (если есть)
@@ -282,7 +282,7 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 
 # 5. Перезапустить сервис
-systemctl restart qazaqdana
+systemctl restart meta-university
 ```
 
 ## 🔒 Настройка SSL (Let's Encrypt) - опционально
@@ -292,7 +292,7 @@ systemctl restart qazaqdana
 apt-get install -y certbot python3-certbot-nginx
 
 # Получение сертификата (после настройки домена)
-certbot --nginx -d qazaqdana.kz -d www.qazaqdana.kz
+certbot --nginx -d meta-university.kz -d www.meta-university.kz
 
 # Автообновление сертификата
 certbot renew --dry-run
@@ -321,12 +321,12 @@ netstat -tulpn | grep :80
 
 ```bash
 # Проверьте логи
-journalctl -u qazaqdana -n 50
-tail -f /var/www/qazaqdana/logs/gunicorn-error.log
+journalctl -u meta-university -n 50
+tail -f /var/www/meta-university/logs/gunicorn-error.log
 
 # Проверьте конфигурацию
 nginx -t
-systemctl status qazaqdana
+systemctl status meta-university
 ```
 
 ### Ошибка подключения к БД
@@ -342,38 +342,38 @@ sudo -u postgres psql -c "\du" # Список пользователей
 
 ```bash
 # Проверьте gunicorn sock
-ls -la /var/www/qazaqdana/gunicorn.sock
+ls -la /var/www/meta-university/gunicorn.sock
 
 # Проверьте права
-chown -R qazaqdana:www-data /var/www/qazaqdana
+chown -R meta-university:www-data /var/www/meta-university
 ```
 
 ### Статика не загружается
 
 ```bash
 # Пересоберите статику
-cd /var/www/qazaqdana
+cd /var/www/meta-university
 source venv/bin/activate
 python manage.py collectstatic --noinput --clear
 
 # Проверьте права
-chmod -R 755 /var/www/qazaqdana/static
+chmod -R 755 /var/www/meta-university/static
 ```
 
 ## 📝 Полезные команды
 
 ```bash
 # Создание бэкапа БД
-sudo -u postgres pg_dump qazaqdana_db > backup_$(date +%Y%m%d).sql
+sudo -u postgres pg_dump meta-university_db > backup_$(date +%Y%m%d).sql
 
 # Восстановление БД
-sudo -u postgres psql qazaqdana_db < backup_20260211.sql
+sudo -u postgres psql meta-university_db < backup_20260211.sql
 
 # Просмотр активных соединений
 ss -tulpn
 
 # Очистка логов
-truncate -s 0 /var/www/qazaqdana/logs/*.log
+truncate -s 0 /var/www/meta-university/logs/*.log
 ```
 
 ## 🎉 Готово!

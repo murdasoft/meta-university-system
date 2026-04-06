@@ -78,13 +78,13 @@ ssh root@109.248.32.73
 ### Базовые команды
 ```bash
 # Перезапуск приложения
-sudo systemctl restart qazaqdana
+sudo systemctl restart meta-university
 
 # Просмотр логов
-tail -f /var/www/qazaqdana/logs/gunicorn-error.log
+tail -f /var/www/meta-university/logs/gunicorn-error.log
 
 # Статус сервисов
-sudo systemctl status qazaqdana nginx
+sudo systemctl status meta-university nginx
 ```
 
 ---
@@ -102,8 +102,8 @@ Storage: 20 GB NVMe
 
 ### База данных
 ```
-База: qazaqdana_db
-Пользователь: qazaqdana_user
+База: meta-university_db
+Пользователь: meta-university_user
 Пароль: QazaqDana2026!SecurePass
 Хост: localhost
 Порт: 5432
@@ -140,8 +140,8 @@ Endpoints:
 ## Устранение неполадок
 
 Обычный порядок проверки:
-1. Логи приложения: `/var/www/qazaqdana/logs/`
-2. Состояние сервисов: `systemctl status qazaqdana nginx`
+1. Логи приложения: `/var/www/meta-university/logs/`
+2. Состояние сервисов: `systemctl status meta-university nginx`
 3. Разделы этой папки по теме (сервер, API, БД и т.д.)
 
 ---

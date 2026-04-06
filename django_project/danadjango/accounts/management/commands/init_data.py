@@ -14,7 +14,7 @@ class Command(BaseCommand):
         if not User.objects.filter(username='admin').exists():
             User.objects.create_superuser(
                 username='admin',
-                email='admin@qazaqdana.local',
+                email='admin@meta-university.local',
                 password='admin123',
                 role='admin',
                 first_name='Администратор',
@@ -28,7 +28,7 @@ class Command(BaseCommand):
         if not User.objects.filter(username='testuser').exists():
             User.objects.create_user(
                 username='testuser',
-                email='test@qazaqdana.local',
+                email='test@meta-university.local',
                 password='test123',
                 role='user',
                 first_name='Тестовый',

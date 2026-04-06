@@ -32,12 +32,12 @@ echo "=========================================="
 echo "Шаг 3: Настройка PostgreSQL"
 echo "=========================================="
 sudo -u postgres psql << 'EOF'
-CREATE DATABASE qazaqdana_db;
-CREATE USER qazaqdana_user WITH PASSWORD 'QazaqDana2026!SecurePass';
-ALTER ROLE qazaqdana_user SET client_encoding TO 'utf8';
-ALTER ROLE qazaqdana_user SET default_transaction_isolation TO 'read committed';
-ALTER ROLE qazaqdana_user SET timezone TO 'Asia/Almaty';
-GRANT ALL PRIVILEGES ON DATABASE qazaqdana_db TO qazaqdana_user;
+CREATE DATABASE meta-university_db;
+CREATE USER meta-university_user WITH PASSWORD 'QazaqDana2026!SecurePass';
+ALTER ROLE meta-university_user SET client_encoding TO 'utf8';
+ALTER ROLE meta-university_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE meta-university_user SET timezone TO 'Asia/Almaty';
+GRANT ALL PRIVILEGES ON DATABASE meta-university_db TO meta-university_user;
 \q
 EOF
 
@@ -45,9 +45,9 @@ echo ""
 echo "=========================================="
 echo "Шаг 4: Создание пользователя и директорий"
 echo "=========================================="
-useradd -m -s /bin/bash qazaqdana || true
-mkdir -p /var/www/qazaqdana
-chown qazaqdana:qazaqdana /var/www/qazaqdana
+useradd -m -s /bin/bash meta-university || true
+mkdir -p /var/www/meta-university
+chown meta-university:meta-university /var/www/meta-university
 
 echo ""
 echo "=========================================="
@@ -57,11 +57,11 @@ echo ""
 echo "Теперь загрузите файлы проекта с локального компьютера:"
 echo ""
 echo "На ВАШЕМ КОМПЬЮТЕРЕ выполните:"
-echo "  cd /Users/daniyarmukhtarov/Desktop/project/qazaqdana/danadjango"
-echo "  rsync -avz --exclude='venv*' --exclude='__pycache__' --exclude='.git' ./ root@109.248.32.73:/var/www/qazaqdana/"
+echo "  cd /Users/daniyarmukhtarov/Desktop/project/meta-university/danadjango"
+echo "  rsync -avz --exclude='venv*' --exclude='__pycache__' --exclude='.git' ./ root@109.248.32.73:/var/www/meta-university/"
 echo ""
 echo "После загрузки файлов вернитесь на сервер и запустите:"
-echo "  cd /var/www/qazaqdana"
+echo "  cd /var/www/meta-university"
 echo "  bash deploy/deploy_step2.sh"
 echo "  bash deploy/deploy_step3.sh"
 

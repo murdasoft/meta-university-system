@@ -4,8 +4,8 @@
 
 SERVER_IP="109.248.32.73"
 SERVER_USER="root"
-SERVER_PATH="/var/www/qazaqdana"
-LOCAL_PATH="/Users/daniyarmukhtarov/Desktop/project/qazaqdana/danadjango"
+SERVER_PATH="/var/www/meta-university"
+LOCAL_PATH="/Users/daniyarmukhtarov/Desktop/project/meta-university/danadjango"
 
 echo "=========================================="
 echo "📤 Загрузка проекта на сервер"

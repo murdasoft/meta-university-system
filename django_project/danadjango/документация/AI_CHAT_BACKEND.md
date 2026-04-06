@@ -298,8 +298,8 @@ curl -X GET http://109.248.32.73/api/ai/quota/ \
 
 ### Статус сервиса:
 ```bash
-systemctl status qazaqdana
-# ● qazaqdana.service - Qazaq Dana Django Application
+systemctl status meta-university
+# ● meta-university.service - Qazaq Dana Django Application
 #      Active: active (running)
 ```
 
