@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -104,6 +105,8 @@ CACHES = {
     }
 }
 
+import dj_database_url
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -113,6 +116,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# If Vercel/Supabase provides a Postgres URL, use it
+if os.environ.get('POSTGRES_URL_NON_POOLING'):
+    DATABASES['default'] = dj_database_url.parse(
+        os.environ.get('POSTGRES_URL_NON_POOLING'), 
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+    # Supabase uses Postgres, so we remove the read-only hacks that we used for SQLite
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 
 # Password validation
