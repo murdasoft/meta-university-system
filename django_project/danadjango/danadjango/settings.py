@@ -217,3 +217,7 @@ from .metapko_settings import (
     METAPKO_PORTAL_HINT_LOGIN,
     METAPKO_PORTAL_HINT_PASSWORD,
 )
+
+# Vercel Read-Only Filesystem Fixes
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+CSRF_USE_SESSIONS = False
