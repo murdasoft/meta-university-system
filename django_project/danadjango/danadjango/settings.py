@@ -167,6 +167,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+# WhiteNoise search for files in STATICFILES_DIRS if they aren't in STATIC_ROOT
+WHITENOISE_USE_FINDERS = True
+
 # Media files
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
