@@ -16,4 +16,5 @@ urlpatterns = [
     path('run-system-initializer/', views.run_system_initializer, name='run-system-initializer'),
     path('teacher/<int:teacher_id>/edit/', views.edit_teacher_manual, name='edit-teacher-manual'),
     path('teacher/<int:teacher_id>/delete/', views.delete_teacher, name='delete-teacher'),
+    path('assign-teacher-from-dashboard/', views.assign_teacher_from_dashboard, name='assign-teacher-from-dashboard'),
 ]

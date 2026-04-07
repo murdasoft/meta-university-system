@@ -255,7 +255,7 @@
                                 <th>Название</th>
                                 <th>Часов</th>
                                 <th>Тип</th>
-                                <th>Преподаватель</th>
+                                <th>Преподаватель (Закрепить)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -265,11 +265,17 @@
                                 <td>{{ c.scheduler_profile.target_hours }}</td>
                                 <td>{{ c.scheduler_profile.get_course_type_display }}</td>
                                 <td>
-                                    {% if c.teacher %}
-                                        {{ c.teacher.full_name }}
-                                    {% else %}
-                                        <span style="color: var(--accent2)">Не назначен</span>
-                                    {% endif %}
+                                    <form action="{% url 'assign-teacher-from-dashboard' %}" method="POST" style="display: flex; gap: 0.5rem; align-items: center;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="course_id" value="{{ c.id }}">
+                                        <select name="teacher_id" style="flex: 1; padding: 0.3rem; font-size: 0.85rem; background: var(--bg0); color: white; border: 1px solid var(--border); border-radius: 4px;">
+                                            <option value="">-- Выбрать --</option>
+                                            {% for t in teachers %}
+                                                <option value="{{ t.id }}" {% if c.teacher_id == t.id %}selected{% endif %}>{{ t.full_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">ОК</button>
+                                    </form>
                                 </td>
                             </tr>
                             {% endfor %}

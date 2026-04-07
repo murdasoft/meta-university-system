@@ -206,6 +206,32 @@ def create_course_manual(request):
             
     return redirect('load-dashboard')
 
+@login_required
+def assign_teacher_from_dashboard(request):
+    """Быстрая привязка преподавателя к дисциплине из общей таблицы."""
+    if request.method == 'POST':
+        course_id = request.POST.get('course_id')
+        teacher_id = request.POST.get('teacher_id')
+        
+        if course_id and teacher_id:
+            course = get_object_or_404(Course, id=course_id)
+            teacher = get_object_or_404(Teacher, id=teacher_id)
+            
+            # Удаляем старые назначения для этой дисциплины, если были
+            AssignmentResult.objects.filter(course=course).delete()
+            
+            # Создаем новое назначение (подтвержденное)
+            AssignmentResult.objects.create(
+                course=course,
+                teacher=teacher,
+                is_confirmed=True
+            )
+            messages.success(request, f'Дисциплина "{course.title}" закреплена за {teacher.full_name}.')
+        else:
+            messages.error(request, 'Ошибка привязки: не выбраны данные.')
+            
+    return redirect('load-dashboard')
+
 from .logic.initializer import SystemInitializer
 
 @login_required
