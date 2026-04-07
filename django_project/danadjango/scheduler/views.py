@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from metapko.models import Teacher, Course, StudyGroup, Room, Building, ClassSession
-from .models import TeacherProfile, CourseProfile, GroupProfile, AssignmentResult, ScheduleConflict, ScheduleSession
+from .models import TeacherProfile, CourseProfile, GroupProfile, AssignmentResult, ScheduleConflict
 from .logic.distributor import LoadDistributor
 from .logic.scheduler import ScheduleGenerator
 from .forms import ManualAssignForm
@@ -144,7 +144,7 @@ from .logic.setup_expert import SetupExpert
 def run_setup_expert(request):
     """Полная очистка системы (RESET)."""
     # Удаляем всё по цепочке, чтобы начать с нуля
-    ScheduleSession.objects.all().delete()
+    ClassSession.objects.all().delete()
     AssignmentResult.objects.all().delete()
     Course.objects.all().delete()
     StudyGroup.objects.all().delete() # По ТЗ это группы
