@@ -122,9 +122,20 @@
 
         <div class="grid">
             <div class="main-col">
+                <!-- System Setup & Demo -->
+                <div class="card" style="background: rgba(78, 205, 196, 0.05); border: 1px solid var(--accent);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="color: var(--accent);">🚀 Первичная настройка</h2>
+                            <p style="font-size: 0.9rem; color: var(--muted);">Если система пуста, начните с генерации учебного окружения.</p>
+                        </div>
+                        <a href="{% url 'run-system-initializer' %}" class="btn">Заполнить демо-данными</a>
+                    </div>
+                </div>
+
                 <div class="card">
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                        <a href="{% url 'run-setup-expert' %}" class="btn btn--warning" style="flex: 1; text-align: center;">🔧 Исправить и дозаполнить данные (Эксперт)</a>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <a href="{% url 'run-setup-expert' %}" class="btn btn--warning" style="flex: 1; text-align: center;">🔧 Исправить и дозаполнить профили</a>
                         <a href="{% url 'run-distributor' %}" class="btn" style="flex: 1; text-align: center;">⚡ Рассчитать нагрузку</a>
                     </div>
 
@@ -159,7 +170,7 @@
                             <tr>
                                 <th>Преподаватель</th>
                                 <th>Степень / Нагрузка</th>
-                                <th>Статус</th>
+                                <th>Действия</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -177,11 +188,38 @@
                                         {{ t.scheduler_profile.max_load_hours }} ч. макс ({{ t.scheduler_profile.employment_rate }} ст.)
                                     </div>
                                 </td>
-                                    <div class="progress-bg">
-                                        <div class="progress-fg" style="width: 40%"></div>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button onclick="toggleEdit('{{ t.id }}')" class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: var(--warning); color: black;">✏️</button>
+                                        <a href="{% url 'delete-teacher' t.id %}" class="btn btn--danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="return confirm('Удалить преподавателя?')">🗑️</a>
+                                    </div>
+                                    <!-- Скрытая форма редактирования -->
+                                    <div id="edit-form-{{ t.id }}" style="display: none; position: absolute; background: var(--bg1); border: 1px solid var(--accent); padding: 1rem; border-radius: 8px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                                        <form action="{% url 'edit-teacher-manual' t.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="text" name="full_name" value="{{ t.full_name }}" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white; border: 1px solid var(--border);">
+                                            <input type="text" name="position" value="{{ t.position }}" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white; border: 1px solid var(--border);">
+                                            <select name="degree" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white;">
+                                                <option value="none" {% if t.scheduler_profile.academic_degree == 'none' %}selected{% endif %}>Без степени</option>
+                                                <option value="master" {% if t.scheduler_profile.academic_degree == 'master' %}selected{% endif %}>Магистр</option>
+                                                <option value="phd" {% if t.scheduler_profile.academic_degree == 'phd' %}selected{% endif %}>PhD</option>
+                                                <option value="assoc_prof" {% if t.scheduler_profile.academic_degree == 'assoc_prof' %}selected{% endif %}>Асоц. профессор</option>
+                                                <option value="professor" {% if t.scheduler_profile.academic_degree == 'professor' %}selected{% endif %}>Профессор</option>
+                                                <option value="research_prof" {% if t.scheduler_profile.academic_degree == 'research_prof' %}selected{% endif %}>Профессор-исследователь</option>
+                                            </select>
+                                            <select name="rate" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white;">
+                                                <option value="1.0" {% if t.scheduler_profile.employment_rate == 1.0 %}selected{% endif %}>1.0 ставка</option>
+                                                <option value="0.5" {% if t.scheduler_profile.employment_rate == 0.5 %}selected{% endif %}>0.5 ставки</option>
+                                                <option value="1.5" {% if t.scheduler_profile.employment_rate == 1.5 %}selected{% endif %}>1.5 ставки</option>
+                                                <option value="0.25" {% if t.scheduler_profile.employment_rate == 0.25 %}selected{% endif %}>0.25 ставки</option>
+                                            </select>
+                                            <div style="display: flex; gap: 0.5rem;">
+                                                <button type="submit" class="btn" style="flex: 1;">Сохранить</button>
+                                                <button type="button" onclick="toggleEdit('{{ t.id }}')" class="btn btn--danger" style="flex: 1;">Отмена</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </td>
-                                <td><span style="color: var(--success)">В норме</span></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -221,6 +259,21 @@
 
             <div class="side-col">
                 <div class="card">
+                    <h2>Готовность системы</h2>
+                    <ul style="list-style: none; font-size: 0.9rem;">
+                        <li style="margin-bottom: 0.5rem;">
+                            {% if teachers.exists %}✅{% else %}❌{% endif %} Преподавателей: {{ teachers.count }}
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            {% if courses.exists %}✅{% else %}❌{% endif %} Дисциплин: {{ courses.count }}
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            {% if assignments.exists %}✅{% else %}❌{% endif %} Распределено нагрузок: {{ assignments.count }}
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
                     <h2>Конфликты и ошибки</h2>
                     {% if conflicts %}
                         {% for conflict in conflicts %}
@@ -241,5 +294,15 @@
             </div>
         </div>
     </div>
+    <script>
+        function toggleEdit(id) {
+            const form = document.getElementById('edit-form-' + id);
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

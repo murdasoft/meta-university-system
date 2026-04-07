@@ -175,6 +175,43 @@ def create_teacher_manual(request):
             
     return redirect('load-dashboard')
 
+from .logic.initializer import SystemInitializer
+
+@login_required
+def run_system_initializer(request):
+    """Наполнение системы демонстрационными данными."""
+    stats = SystemInitializer.run_seed()
+    messages.success(request, f'Система инициализирована. Добавлено: Аудитории ({stats["rooms"]}), Группы ({stats["groups"]}), Курсы ({stats["courses"]}).')
+    return redirect('load-dashboard')
+
+@login_required
+def edit_teacher_manual(request, teacher_id):
+    """Редактирование ФИО и параметров преподавателя."""
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    profile, _ = TeacherProfile.objects.get_or_create(teacher=teacher)
+    
+    if request.method == 'POST':
+        teacher.full_name = request.POST.get('full_name', teacher.full_name)
+        teacher.position = request.POST.get('position', teacher.position)
+        teacher.save()
+        
+        profile.academic_degree = request.POST.get('degree', profile.academic_degree)
+        profile.employment_rate = float(request.POST.get('rate', profile.employment_rate))
+        profile.save()
+        
+        messages.success(request, f'Данные преподавателя {teacher.full_name} обновлены.')
+        
+    return redirect('load-dashboard')
+
+@login_required
+def delete_teacher(request, teacher_id):
+    """Удаление преподавателя."""
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    name = teacher.full_name
+    teacher.delete()
+    messages.warning(request, f'Преподаватель {name} удален из системы.')
+    return redirect('load-dashboard')
+
 @login_required
 def remove_assignment(request, assignment_id):
     """Снятие дисциплины с преподавателя."""
