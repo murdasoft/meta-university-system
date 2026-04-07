@@ -200,6 +200,17 @@
                                 <td>
                                     <strong><a href="{% url 'teacher-detail' t.id %}" style="color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--accent);">{{ t.full_name }}</a></strong><br>
                                     <small style="color: var(--muted)">{{ t.position }}</small>
+                                    
+                                    <!-- Список закрепленных дисциплин -->
+                                    <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px;">
+                                        {% for course in t.course_set.all %}
+                                            <span style="font-size: 0.7rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(78, 205, 196, 0.3); padding: 1px 5px; border-radius: 4px; color: var(--accent);">
+                                                📚 {{ course.title }}
+                                            </span>
+                                        {% empty %}
+                                            <small style="color: var(--muted); font-size: 0.65rem;">Нет закрепленных дисциплин</small>
+                                        {% endfor %}
+                                    </div>
                                 </td>
                                 <td>
                                     <span style="font-size: 0.8rem; background: rgba(78, 205, 196, 0.1); padding: 2px 6px; border-radius: 4px; color: var(--accent);">
