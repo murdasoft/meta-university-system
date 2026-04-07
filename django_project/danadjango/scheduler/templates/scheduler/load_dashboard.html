@@ -216,37 +216,35 @@
                                     <strong><a href="{% url 'teacher-detail' t.id %}" style="color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--accent);">{{ t.full_name }}</a></strong><br>
                                     <small style="color: var(--muted)">{{ t.position }}</small>
                                     
-                                    <!-- Список закрепленных дисциплин -->
-                                    <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px;">
+                                <div style="margin-top: 10px;">
+                                    <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between;">
+                                        <span>Недельная нагрузка:</span>
+                                        <span style="font-weight: 600; color: white;">
+                                            {{ t.current_weekly_load|floatformat:1 }} / {{ t.scheduler_profile.max_load_hours|floatformat:1 }} ч.
+                                        </span>
+                                    </div>
+                                    <div style="height: 6px; background: var(--bg0); border-radius: 3px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                                        <div style="width: {{ t.load_percent }}%; height: 100%; background: linear-gradient(90deg, var(--accent), #5bc0de); transition: width 0.5s;"></div>
+                                    </div>
+                                    <div style="font-size: 0.65rem; color: var(--muted); margin-top: 4px; text-align: right;">
+                                        Загрузка: {{ t.load_percent }}%
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                                    <p style="font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase;">Закреплено:</p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 5px;">
                                         {% for course in t.course_set.all %}
-                                            <span style="font-size: 0.7rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(78, 205, 196, 0.3); padding: 1px 5px; border-radius: 4px; color: var(--accent);">
-                                                📚 {{ course.title }}
+                                            <span style="font-size: 0.7rem; background: rgba(78, 205, 196, 0.1); color: var(--accent); padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(78, 205, 196, 0.2);">
+                                                {{ course.title }}
                                             </span>
                                         {% empty %}
-                                            <small style="color: var(--muted); font-size: 0.65rem;">Нет закрепленных дисциплин</small>
+                                            <span style="font-size: 0.7rem; color: var(--muted); font-style: italic;">Дисциплины не закреплены</span>
                                         {% endfor %}
                                     </div>
-                                    
-                                    <!-- Фиктивная гистограмма для визуализации 'автоматизации' из ТЗ (п. 1.2) -->
-                                    <div style="margin-top: 10px; display: flex; align-items: flex-end; gap: 2px; height: 18px; opacity: 0.4;">
-                                        <div style="width: 4px; height: 10%; background: var(--accent); border-radius: 1px;"></div>
-                                        <div style="width: 4px; height: 50%; background: var(--accent); border-radius: 1px;"></div>
-                                        <div style="width: 4px; height: 30%; background: var(--accent); border-radius: 1px;"></div>
-                                        <div style="width: 4px; height: 80%; background: var(--accent); border-radius: 1px;"></div>
-                                        <div style="width: 4px; height: 40%; background: var(--accent); border-radius: 1px;"></div>
-                                        <small style="font-size: 0.55rem; color: var(--muted); margin-left: 2px;">нед. нагрузка</small>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span style="font-size: 0.8rem; background: rgba(78, 205, 196, 0.1); padding: 2px 6px; border-radius: 4px; color: var(--accent);">
-                                        {{ t.scheduler_profile.get_academic_degree_display }}
-                                    </span>
-                                    <div style="margin-top: 5px; font-size: 0.9rem;">
-                                        {{ t.scheduler_profile.max_load_hours }} ч. макс ({{ t.scheduler_profile.employment_rate }} ст.)
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex; gap: 0.5rem;">
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 5px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px;">
                                         <button onclick="toggleEdit('{{ t.id }}')" class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: var(--warning); color: black;">✏️</button>
                                         <a href="{% url 'delete-teacher' t.id %}" class="btn btn--danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="return confirm('Удалить преподавателя?')">🗑️</a>
                                     </div>

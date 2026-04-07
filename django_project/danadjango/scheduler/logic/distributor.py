@@ -59,15 +59,15 @@ class LoadDistributor:
             for teacher in potential_teachers:
                 t_profile = teacher.scheduler_profile
                 
-                # Считаем текущую нагрузку в часах в неделю (для сравнения с max_load_hours)
-                # Поскольку target_hours - это часы за семестр (обычно 16 недель), 
-                # мы делим на 16 для оценки недельной нагрузки, ИЛИ сравниваем напрямую если max_load_hours тоже за семестр.
-                # В нашей модели max_load_hours - это недельный лимит (20ч).
+                # РАСЧЕТ: 32 часа в семестр = 2 часа в неделю (пара 2 часа * 1 раз в неделю)
                 weekly_hours = hours / 16.0 
                 
                 # Считаем уже назначенную недельную нагрузку
                 results = AssignmentResult.objects.filter(teacher=teacher)
-                current_weekly_load = sum([r.course.scheduler_profile.target_hours / 16.0 for r in results if hasattr(r.course, 'scheduler_profile')])
+                current_weekly_load = 0
+                for r in results:
+                    if hasattr(r.course, 'scheduler_profile'):
+                        current_weekly_load += (r.course.scheduler_profile.target_hours / 16.0)
                 
                 if current_weekly_load + weekly_hours <= t_profile.max_load_hours:
                     # 1. Создаем результат планировщика

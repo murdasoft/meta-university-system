@@ -10,12 +10,28 @@ from .forms import ManualAssignForm
 @login_required
 def load_dashboard(request):
     """Панель управления нагрузкой."""
-    teachers = Teacher.objects.filter(is_active=True).prefetch_related('scheduler_profile')
+    teachers = list(Teacher.objects.filter(is_active=True).prefetch_related('scheduler_profile', 'course_set'))
+    
+    # Расчет текущей недельной нагрузки для каждого преподавателя
     for teacher in teachers:
         # Обеспечиваем наличие профиля
         if not hasattr(teacher, 'scheduler_profile'):
             TeacherProfile.objects.get_or_create(teacher=teacher)
             
+        weekly_load = 0
+        # Считаем сумму недельной нагрузки по всем закрепленным курсам
+        assigned_results = AssignmentResult.objects.filter(teacher=teacher)
+        for res in assigned_results:
+            try:
+                # 32 часа / 16 недель = 2 часа в неделю
+                weekly_load += (res.course.scheduler_profile.target_hours / 16.0)
+            except:
+                pass
+        
+        teacher.current_weekly_load = weekly_load
+        max_h = teacher.scheduler_profile.max_load_hours
+        teacher.load_percent = min(100, int((weekly_load / max_h * 100))) if max_h > 0 else 0
+
     courses = Course.objects.filter(is_active=True).prefetch_related('scheduler_profile')
     for course in courses:
         if not hasattr(course, 'scheduler_profile'):

@@ -65,20 +65,20 @@ class SystemInitializer:
             ("Этика в ИТ", "ETH-100", 16, CourseProfile.CourseType.PRACTICE),
         ]
         
-        all_groups = StudyGroup.objects.filter(name__in=groups_data)
+        all_groups = StudyGroup.objects.all() # Обновляем список всех групп
         
         for title, code, hours, c_type in courses_data:
             course, created = Course.objects.get_or_create(title=title, code=code)
-            if created:
-                course.study_groups.set(all_groups)
-                CourseProfile.objects.update_or_create(
-                    course=course,
-                    defaults={
-                        'target_hours': hours,
-                        'course_type': c_type
-                    }
-                )
-                stats['courses'] += 1
+            course.study_groups.set(all_groups) # Привязываем КО ВСЕМ группам
+            
+            CourseProfile.objects.update_or_create(
+                course=course,
+                defaults={
+                    'target_hours': hours,
+                    'course_type': c_type
+                }
+            )
+            stats['courses'] += 1
                 
         # 6. Авто-распределение для быстрого старта (Демо)
         from scheduler.models import AssignmentResult

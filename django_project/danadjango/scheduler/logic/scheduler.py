@@ -37,7 +37,11 @@ class ScheduleGenerator:
             
             # Находим профиль курса для понимания кол-ва занятий
             total_hours = course.scheduler_profile.target_hours
-            sessions_needed = total_hours // 2 # Одно занятие = 2 часа
+            
+            # РАСЧЕТ НЕДЕЛЬНОЙ НАГРУЗКИ (для недели):
+            # 32 часа в семестр / 16 недель / 2 часа за пару = 1 пара в неделю.
+            # 64 часа в семестр / 16 недель / 2 часа за пару = 2 пары в неделю.
+            sessions_needed = max(1, (total_hours // 2) // 16) 
             
             groups = course.study_groups.all()
             if not groups.exists():
