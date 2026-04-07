@@ -8,6 +8,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from ocr.models import OCRRequest, Language, OCRSettings
+from metapko.models import Teacher, Course, StudyGroup
+from scheduler.models import AssignmentResult
 import json
 
 User = get_user_model()
@@ -53,6 +55,10 @@ def dashboard_index(request):
         'completed_requests': completed_requests,
         'total_users': total_users,
         'active_users': active_users,
+        'total_teachers': Teacher.objects.count(),
+        'total_courses': Course.objects.count(),
+        'total_groups': StudyGroup.objects.count(),
+        'total_assignments': AssignmentResult.objects.count(),
         'recent_requests': recent_requests,
         'daily_labels': json.dumps(daily_labels),
         'daily_completed': json.dumps(daily_completed),
@@ -232,6 +238,14 @@ def statistics_view(request):
         ).count()
         monthly_data.append(count)
     
+    # Академическая статистика
+    academy_stats = {
+        'total_teachers': Teacher.objects.count(),
+        'total_courses': Course.objects.count(),
+        'total_groups': StudyGroup.objects.count(),
+        'total_assignments': AssignmentResult.objects.count(),
+    }
+
     context = {
         'total_requests': total_requests,
         'completed': completed,
@@ -241,6 +255,7 @@ def statistics_view(request):
         'avg_confidence': avg_stats['avg_confidence'],
         'monthly_labels': json.dumps(monthly_labels),
         'monthly_data': json.dumps(monthly_data),
+        'academy': academy_stats,
     }
     
     return render(request, 'dashboard/statistics.dj.html', context)
