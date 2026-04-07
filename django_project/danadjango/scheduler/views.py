@@ -175,6 +175,37 @@ def create_teacher_manual(request):
             
     return redirect('load-dashboard')
 
+@login_required
+def create_course_manual(request):
+    """Ручное создание дисциплины и её профиля."""
+    from metapko.models import StudyGroup
+    
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        hours = request.POST.get('hours', '32')
+        course_type = request.POST.get('type', 'lecture')
+        
+        if title:
+            # Создаем базовый курс в metapko
+            course = Course.objects.create(title=title, code=title[:10].upper())
+            
+            # Привязываем ко всем группам по умолчанию для теста (или к первой встречной)
+            groups = StudyGroup.objects.all()
+            if groups.exists():
+                course.study_groups.set(groups)
+                
+            # Создаем его профиль в scheduler
+            CourseProfile.objects.create(
+                course=course,
+                target_hours=int(hours),
+                course_type=course_type
+            )
+            messages.success(request, f'Дисциплина "{title}" успешно создана.')
+        else:
+            messages.error(request, 'Название обязательно.')
+            
+    return redirect('load-dashboard')
+
 from .logic.initializer import SystemInitializer
 
 @login_required

@@ -12,6 +12,7 @@ urlpatterns = [
     path('assignment/<int:assignment_id>/remove/', views.remove_assignment, name='remove-assignment'),
     path('run-setup-expert/', views.run_setup_expert, name='run-setup-expert'),
     path('create-teacher-manual/', views.create_teacher_manual, name='create-teacher-manual'),
+    path('create-course-manual/', views.create_course_manual, name='create-course-manual'),
     path('run-system-initializer/', views.run_system_initializer, name='run-system-initializer'),
     path('teacher/<int:teacher_id>/edit/', views.edit_teacher_manual, name='edit-teacher-manual'),
     path('teacher/<int:teacher_id>/delete/', views.delete_teacher, name='delete-teacher'),

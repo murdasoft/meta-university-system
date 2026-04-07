@@ -139,30 +139,51 @@
                         <a href="{% url 'run-distributor' %}" class="btn" style="flex: 1; text-align: center;">⚡ Рассчитать нагрузку</a>
                     </div>
 
-                    <div class="card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border); margin-bottom: 1.5rem;">
-                        <h3 style="margin-bottom: 1rem; font-size: 1rem;">➕ Быстрое добавление преподавателя</h3>
-                        <form action="{% url 'create-teacher-manual' %}" method="POST" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.5rem;">
-                            {% csrf_token %}
-                            <input type="text" name="full_name" placeholder="ФИО преподавателя" required style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
-                            <input type="text" name="position" placeholder="Должность" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
-                            <div style="grid-column: span 3; display: flex; gap: 0.5rem; align-items: center;">
-                                <select name="degree" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
-                                    <option value="none">Без степени</option>
-                                    <option value="master">Магистр</option>
-                                    <option value="phd">PhD</option>
-                                    <option value="assoc_prof">Асоц. профессор</option>
-                                    <option value="professor">Профессор</option>
-                                    <option value="research_prof">Профессор-исследователь</option>
-                                </select>
-                                <select name="rate" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
-                                    <option value="1.0">1.0 ставка</option>
-                                    <option value="0.5">0.5 ставки</option>
-                                    <option value="1.5">1.5 ставки</option>
-                                    <option value="0.25">0.25 ставки</option>
-                                </select>
-                                <button type="submit" class="btn" style="padding: 0.5rem 1rem;">Добавить</button>
-                            </div>
-                        </form>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <!-- Преподаватель -->
+                        <div class="card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border); margin-bottom: 0;">
+                            <h3 style="margin-bottom: 1rem; font-size: 1rem;">➕ Добавить преподавателя</h3>
+                            <form action="{% url 'create-teacher-manual' %}" method="POST" style="display: grid; gap: 0.5rem;">
+                                {% csrf_token %}
+                                <input type="text" name="full_name" placeholder="ФИО преподавателя" required style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
+                                <input type="text" name="position" placeholder="Должность" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
+                                <div style="display: flex; gap: 0.3rem;">
+                                    <select name="degree" style="flex: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
+                                        <option value="none">Без степени</option>
+                                        <option value="master">Магистр</option>
+                                        <option value="phd">PhD</option>
+                                        <option value="assoc_prof">Асоц. профессор</option>
+                                        <option value="professor">Профессор</option>
+                                        <option value="research_prof">Профессор-исследователь</option>
+                                    </select>
+                                    <select name="rate" style="width: 80px; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
+                                        <option value="1.0">1.0 ст</option>
+                                        <option value="0.5">0.5 ст</option>
+                                        <option value="1.5">1.5 ст</option>
+                                    </select>
+                                    <button type="submit" class="btn" style="padding: 0.5rem;">+</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Дисциплина -->
+                        <div class="card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border); margin-bottom: 0;">
+                            <h3 style="margin-bottom: 1rem; font-size: 1rem;">➕ Добавить дисциплину</h3>
+                            <form action="{% url 'create-course-manual' %}" method="POST" style="display: grid; gap: 0.5rem;">
+                                {% csrf_token %}
+                                <input type="text" name="title" placeholder="Название предмета" required style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
+                                <div style="display: flex; gap: 0.3rem;">
+                                    <input type="number" name="hours" value="32" placeholder="Часов" style="width: 70px; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
+                                    <select name="type" style="flex: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg1); color: white;">
+                                        <option value="lecture">Лекция</option>
+                                        <option value="practice">Практика</option>
+                                        <option value="lab">Лабораторная</option>
+                                    </select>
+                                    <button type="submit" class="btn" style="padding: 0.5rem;">+</button>
+                                </div>
+                                <p style="font-size: 0.7rem; color: var(--muted);">*Автономно закрепится за всеми группами.</p>
+                            </form>
+                        </div>
                     </div>
 
                     <table>
