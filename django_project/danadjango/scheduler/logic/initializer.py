@@ -89,5 +89,9 @@ class SystemInitializer:
             for i, course in enumerate(all_courses_objs):
                 teacher = all_teachers_objs[i % len(all_teachers_objs)]
                 AssignmentResult.objects.get_or_create(course=course, teacher=teacher)
+                
+                # СИНХРОНИЗАЦИЯ: прописываем учителя в основной модели курса
+                course.teacher = teacher
+                course.save()
 
         return stats

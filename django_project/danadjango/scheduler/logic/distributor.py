@@ -70,11 +70,16 @@ class LoadDistributor:
                 current_weekly_load = sum([r.course.scheduler_profile.target_hours / 16.0 for r in results if hasattr(r.course, 'scheduler_profile')])
                 
                 if current_weekly_load + weekly_hours <= t_profile.max_load_hours:
+                    # 1. Создаем результат планировщика
                     AssignmentResult.objects.create(
                         course=course,
                         teacher=teacher,
                         is_confirmed=False
                     )
+                    # 2. СИНХРОНИЗАЦИЯ: прописываем учителя в основной модели курса
+                    course.teacher = teacher
+                    course.save()
+                    
                     assigned = True
                     break
             
