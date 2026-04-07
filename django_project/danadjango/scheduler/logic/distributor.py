@@ -41,8 +41,15 @@ class LoadDistributor:
 
             # Сортировка по степени, если это лекция
             if c_profile.course_type == CourseProfile.CourseType.LECTURE:
-                # Очередность: doctor, phd, candidate, master, none
-                degree_order = {'doctor': 0, 'phd': 1, 'candidate': 2, 'master': 3, 'none': 4}
+                # Очередность: research_prof, professor, assoc_prof, phd, master, none
+                degree_order = {
+                    'research_prof': 0, 
+                    'professor': 1, 
+                    'assoc_prof': 2, 
+                    'phd': 3, 
+                    'master': 4, 
+                    'none': 5
+                }
                 potential_teachers = sorted(
                     potential_teachers, 
                     key=lambda t: degree_order.get(t.scheduler_profile.academic_degree, 5)

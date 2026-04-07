@@ -5,9 +5,10 @@ class TeacherProfile(models.Model):
     class Degree(models.TextChoices):
         NONE = 'none', 'Без степени'
         MASTER = 'master', 'Магистр'
-        CANDIDATE = 'candidate', 'Кандидат наук'
-        DOCTOR = 'doctor', 'Доктор наук'
         PHD = 'phd', 'PhD'
+        ASSOC_PROF = 'assoc_prof', 'Асоц. профессор'
+        PROFESSOR = 'professor', 'Профессор'
+        RESEARCH_PROF = 'research_prof', 'Профессор-исследователь'
 
     teacher = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name='scheduler_profile')
     academic_degree = models.CharField('Ученая степень', max_length=20, choices=Degree.choices, default=Degree.NONE)

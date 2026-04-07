@@ -14,10 +14,12 @@ class SetupExpert:
         for teacher in Teacher.objects.filter(scheduler_profile__isnull=True):
             # Распределяем степени в зависимости от должности
             degree = TeacherProfile.Degree.NONE
-            if 'профессор' in teacher.position.lower() or 'доцент' in teacher.position.lower():
-                degree = TeacherProfile.Degree.DOCTOR
+            if 'профессор' in teacher.position.lower():
+                degree = TeacherProfile.Degree.PROFESSOR
+            elif 'доцент' in teacher.position.lower():
+                degree = TeacherProfile.Degree.ASSOC_PROF
             elif 'старший преподаватель' in teacher.position.lower():
-                degree = TeacherProfile.Degree.CANDIDATE
+                degree = TeacherProfile.Degree.PHD
             
             TeacherProfile.objects.create(
                 teacher=teacher,
