@@ -217,16 +217,18 @@ def assign_teacher_from_dashboard(request):
             course = get_object_or_404(Course, id=course_id)
             teacher = get_object_or_404(Teacher, id=teacher_id)
             
-            # Удаляем старые назначения для этой дисциплины, если были
-            AssignmentResult.objects.filter(course=course).delete()
+            # 1. Обновляем основную модель (metapko)
+            course.teacher = teacher
+            course.save()
             
-            # Создаем новое назначение (подтвержденное)
+            # 2. Синхронизируем с результатами планировщика (scheduler)
+            AssignmentResult.objects.filter(course=course).delete()
             AssignmentResult.objects.create(
                 course=course,
                 teacher=teacher,
                 is_confirmed=True
             )
-            messages.success(request, f'Дисциплина "{course.title}" закреплена за {teacher.full_name}.')
+            messages.success(request, f'Дисциплина "{course.title}" успешно закреплена за {teacher.full_name}.')
         else:
             messages.error(request, 'Ошибка привязки: не выбраны данные.')
             
