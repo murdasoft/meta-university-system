@@ -14,8 +14,9 @@ class LoadDistributor:
         AssignmentResult.objects.filter(is_confirmed=False).delete()
         ScheduleConflict.objects.all().delete()
 
-        # 2. Получаем все курсы, требующие распределения
-        courses = Course.objects.filter(is_active=True).order_by('title')
+        # 2. Получаем курсы, у которых ЕЩЕ НЕТ закрепленного преподавателя
+        assigned_course_ids = AssignmentResult.objects.values_list('course_id', flat=True)
+        courses = Course.objects.filter(is_active=True).exclude(id__in=assigned_course_ids).order_by('title')
         
         # 3. Получаем всех активных преподавателей с профилями
         teachers = Teacher.objects.filter(is_active=True, scheduler_profile__isnull=False)

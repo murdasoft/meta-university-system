@@ -301,7 +301,14 @@
                                 <td>{{ c.scheduler_profile.target_hours }}</td>
                                 <td>{{ c.scheduler_profile.get_course_type_display }}</td>
                                 <td>
-                                    <form action="{% url 'assign-teacher-from-dashboard' %}" method="POST" style="display: flex; gap: 0.5rem; align-items: center;">
+                                    {% if c.teacher %}
+                                        <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(46, 204, 113, 0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(46, 204, 113, 0.3);">
+                                            <span style="color: var(--success); font-weight: 600;">✅ {{ c.teacher.full_name }}</span>
+                                            <button onclick="document.getElementById('assign-form-{{ c.id }}').style.display='flex'; this.parentElement.style.display='none';" class="btn" style="padding: 2px 8px; font-size: 0.7rem; background: var(--bg0); border: 1px solid var(--border); color: var(--muted);">Изменить</button>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <form id="assign-form-{{ c.id }}" action="{% url 'assign-teacher-from-dashboard' %}" method="POST" style="{% if c.teacher %}display: none;{% else %}display: flex;{% endif %} gap: 0.5rem; align-items: center;">
                                         {% csrf_token %}
                                         <input type="hidden" name="course_id" value="{{ c.id }}">
                                         <select name="teacher_id" style="flex: 1; padding: 0.3rem; font-size: 0.85rem; background: var(--bg0); color: white; border: 1px solid var(--border); border-radius: 4px;">
