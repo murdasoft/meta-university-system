@@ -6,7 +6,6 @@ urlpatterns = [
     path('run-distributor/', views.run_distributor, name='run-distributor'),
     path('schedule-dashboard/', views.schedule_dashboard, name='schedule-dashboard'),
     path('run-scheduler/', views.run_scheduler, name='run-scheduler'),
-    path('clear-all/', views.clear_all, name='clear-all'),
     path('teacher/<int:teacher_id>/', views.teacher_detail, name='teacher-detail'),
     path('teacher/<int:teacher_id>/assign/', views.manual_assign_course, name='manual-assign-course'),
     path('assignment/<int:assignment_id>/remove/', views.remove_assignment, name='remove-assignment'),
@@ -17,4 +16,5 @@ urlpatterns = [
     path('teacher/<int:teacher_id>/edit/', views.edit_teacher_manual, name='edit-teacher-manual'),
     path('teacher/<int:teacher_id>/delete/', views.delete_teacher, name='delete-teacher'),
     path('assign-teacher-from-dashboard/', views.assign_teacher_from_dashboard, name='assign-teacher-from-dashboard'),
+    path('reset-results/', views.run_reset_results, name='reset-results'),
 ]

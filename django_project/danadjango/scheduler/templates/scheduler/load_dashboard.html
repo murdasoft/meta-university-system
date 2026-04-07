@@ -334,10 +334,18 @@
                     {% endif %}
                 </div>
 
-                <div class="card" style="background: rgba(231, 76, 60, 0.05);">
-                    <h2>Опасная зона</h2>
-                    <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem;">Сброс всех сессий и результатов распределения текущего года.</p>
-                    <a href="{% url 'clear-all' %}" class="btn btn--danger" onclick="return confirm('Вы уверены? Это удалит все сгенерированные данные!')">Очистить всё</a>
+                <div class="card" style="background: rgba(231, 76, 60, 0.05); border: 1px solid rgba(231, 76, 60, 0.1);">
+                    <h2 style="color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Опасная зона</h2>
+                    <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem;">Управление сбросом данных системы.</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="{% url 'reset-results' %}" class="btn" style="background: var(--warning); color: white;" onclick="return confirm('Это удалит только расписание и связки. Преподаватели останутся. Продолжить?')">
+                            💾 Сбросить только результаты
+                        </a>
+                        <a href="{% url 'run-setup-expert' %}" class="btn btn--danger" onclick="return confirm('ВНИМАНИЕ! Это полностью удалит всех преподавателей и предметы. Вы уверены?')">
+                            🧨 Полная очистка БД
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

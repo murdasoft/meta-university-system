@@ -141,19 +141,26 @@ def manual_assign_course(request, teacher_id):
 from .logic.setup_expert import SetupExpert
 
 @login_required
+def run_reset_results(request):
+    """Сброс только результатов (расписания и распределения)."""
+    ClassSession.objects.all().delete()
+    AssignmentResult.objects.all().delete()
+    messages.success(request, "Результаты планирования и расписание сброшены. Преподаватели и предметы сохранены.")
+    return redirect('load-dashboard')
+
+@login_required
 def run_setup_expert(request):
-    """Полная очистка системы (RESET)."""
-    # Удаляем всё по цепочке, чтобы начать с нуля
+    """Полная очистка всей базы данных (Factory Reset)."""
     ClassSession.objects.all().delete()
     AssignmentResult.objects.all().delete()
     Course.objects.all().delete()
-    StudyGroup.objects.all().delete() # По ТЗ это группы
+    StudyGroup.objects.all().delete()
     Room.objects.all().delete()
     Building.objects.all().delete()
     Teacher.objects.all().delete()
     TeacherProfile.objects.all().delete()
     
-    messages.warning(request, "Система полностью очищена. Теперь вы можете запустить быстрый старт или ввести данные вручную.")
+    messages.warning(request, "Система полностью очищена (преподаватели, группы и предметы удалены).")
     return redirect('load-dashboard')
 
 @login_required
