@@ -640,6 +640,16 @@
                 <i class="fas fa-users"></i>
                 <span>Пользователи</span>
             </a>
+
+            <div class="nav-section-title">Академический блок</div>
+            <a href="{% url 'load-dashboard' %}" class="{% if 'load-dashboard' in request.path %}active{% endif %}">
+                <i class="fas fa-university"></i>
+                <span>Нагрузка</span>
+            </a>
+            <a href="{% url 'schedule-dashboard' %}" class="{% if 'schedule-dashboard' in request.path %}active{% endif %}">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Расписание</span>
+            </a>
             
             <div class="nav-section-title">Система</div>
             <a href="{% url 'settings' %}" class="{% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
