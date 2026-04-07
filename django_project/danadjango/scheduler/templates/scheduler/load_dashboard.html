@@ -234,7 +234,7 @@
                                 <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                                     <p style="font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase;">Закреплено:</p>
                                     <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                                        {% for course in t.course_set.all %}
+                                        {% for course in t.courses.all %}
                                             <span style="font-size: 0.7rem; background: rgba(78, 205, 196, 0.1); color: var(--accent); padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(78, 205, 196, 0.2);">
                                                 {{ course.title }}
                                             </span>

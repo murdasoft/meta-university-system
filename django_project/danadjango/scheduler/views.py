@@ -6,11 +6,10 @@ from .models import TeacherProfile, CourseProfile, GroupProfile, AssignmentResul
 from .logic.distributor import LoadDistributor
 from .logic.scheduler import ScheduleGenerator
 from .forms import ManualAssignForm
-#ss
 @login_required
 def load_dashboard(request):
     """Панель управления нагрузкой."""
-    teachers = list(Teacher.objects.filter(is_active=True).prefetch_related('scheduler_profile', 'course_set'))
+    teachers = list(Teacher.objects.filter(is_active=True).prefetch_related('scheduler_profile', 'courses'))
     
     # Расчет текущей недельной нагрузки для каждого преподавателя
     for teacher in teachers:
