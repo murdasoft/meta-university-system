@@ -37,7 +37,26 @@ class SystemInitializer:
                 GroupProfile.objects.get_or_create(group=group, student_count=20)
                 stats['groups'] += 1
 
-        # 4. Курсы
+        # 4. Преподаватели (ППС)
+        teachers_data = [
+            ("Бутакова Марина Владимировна", "PhD", 1.0),
+            ("Иванов Иван Иванович", "none", 1.0),
+            ("Садвакасова Мадина", "assoc_prof", 1.0),
+        ]
+        stats['teachers'] = 0
+        for name, degree, rate in teachers_data:
+            teacher, created = Teacher.objects.get_or_create(full_name=name)
+            if created:
+                TeacherProfile.objects.get_or_create(
+                    teacher=teacher,
+                    defaults={
+                        'academic_degree': degree,
+                        'employment_rate': rate
+                    }
+                )
+                stats['teachers'] += 1
+
+        # 5. Курсы
         courses_data = [
             ("Математический анализ", "MATH-101", 32, CourseProfile.CourseType.LECTURE),
             ("Алгоритмы и структуры данных", "ALGO-201", 32, CourseProfile.CourseType.PRACTICE),
@@ -52,10 +71,12 @@ class SystemInitializer:
             course, created = Course.objects.get_or_create(title=title, code=code)
             if created:
                 course.study_groups.set(all_groups)
-                CourseProfile.objects.create(
+                CourseProfile.objects.update_or_create(
                     course=course,
-                    target_hours=hours,
-                    course_type=c_type
+                    defaults={
+                        'target_hours': hours,
+                        'course_type': c_type
+                    }
                 )
                 stats['courses'] += 1
                 

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from metapko.models import Teacher, Course, StudyGroup, Room, ClassSession
-from .models import TeacherProfile, CourseProfile, GroupProfile, AssignmentResult, ScheduleConflict
+from metapko.models import Teacher, Course, StudyGroup, Room, Building, ClassSession
+from .models import TeacherProfile, CourseProfile, GroupProfile, AssignmentResult, ScheduleConflict, ScheduleSession
 from .logic.distributor import LoadDistributor
 from .logic.scheduler import ScheduleGenerator
 from .forms import ManualAssignForm
@@ -142,9 +142,18 @@ from .logic.setup_expert import SetupExpert
 
 @login_required
 def run_setup_expert(request):
-    """Запуск эксперта по подготовке данных."""
-    stats = SetupExpert.fill_missing_profiles()
-    messages.success(request, f'Эксперт завершил работу. Создано профилей: Учителя ({stats["teachers"]}), Курсы ({stats["courses"]}), Группы ({stats["groups"]}).')
+    """Полная очистка системы (RESET)."""
+    # Удаляем всё по цепочке, чтобы начать с нуля
+    ScheduleSession.objects.all().delete()
+    AssignmentResult.objects.all().delete()
+    Course.objects.all().delete()
+    StudyGroup.objects.all().delete() # По ТЗ это группы
+    Room.objects.all().delete()
+    Building.objects.all().delete()
+    Teacher.objects.all().delete()
+    TeacherProfile.objects.all().delete()
+    
+    messages.warning(request, "Система полностью очищена. Теперь вы можете запустить быстрый старт или ввести данные вручную.")
     return redirect('load-dashboard')
 
 @login_required
