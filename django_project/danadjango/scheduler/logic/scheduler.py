@@ -5,7 +5,12 @@ from scheduler.models import TeacherProfile, CourseProfile, GroupProfile, Assign
 
 class ScheduleGenerator:
     def __init__(self, start_date=None):
-        self.start_date = start_date or timezone.now().date()
+        if not start_date:
+            today = timezone.now().date()
+            # Находим ближайший понедельник (weekday() возвращает 0 для Пн)
+            self.start_date = today - timedelta(days=today.weekday())
+        else:
+            self.start_date = start_date
         self.slots = [
             (time(8, 30), time(10, 0)),
             (time(10, 15), time(11, 45)),

@@ -121,8 +121,7 @@ DATABASES = {
 if os.environ.get('POSTGRES_URL_NON_POOLING'):
     DATABASES['default'] = dj_database_url.parse(
         os.environ.get('POSTGRES_URL_NON_POOLING'), 
-        conn_max_age=600,
-        conn_health_checks=True,
+        conn_max_age=0,
     )
     # Supabase uses Postgres, so we remove the read-only hacks that we used for SQLite
     SESSION_ENGINE = 'django.contrib.sessions.backends.db'
