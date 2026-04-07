@@ -6,7 +6,7 @@ from .models import TeacherProfile, CourseProfile, GroupProfile, AssignmentResul
 from .logic.distributor import LoadDistributor
 from .logic.scheduler import ScheduleGenerator
 from .forms import ManualAssignForm
-
+#ss
 @login_required
 def load_dashboard(request):
     """Панель управления нагрузкой."""
