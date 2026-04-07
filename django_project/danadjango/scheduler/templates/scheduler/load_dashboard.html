@@ -97,6 +97,21 @@
             margin-bottom: 1.5rem;
             border: 1px solid rgba(46, 204, 113, 0.3);
         }
+
+        /* Progress Overlay */
+        #dist-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 16, 24, 0.95);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; backdrop-filter: blur(10px);
+        }
+        .dist-loader {
+            width: 300px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden; margin: 20px 0;
+        }
+        .dist-bar {
+            width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;
+            box-shadow: 0 0 15px var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -136,7 +151,7 @@
                 <div class="card">
                     <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
                         <a href="{% url 'run-system-initializer' %}" class="btn btn--warning" style="flex: 1; text-align: center;">🔧 Обновить профили и данные</a>
-                        <a href="{% url 'run-distributor' %}" class="btn" style="flex: 1; text-align: center;">⚡ Рассчитать нагрузку</a>
+                        <button onclick="startDistribution()" class="btn" style="flex: 1; text-align: center;">⚡ Рассчитать нагрузку</button>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
@@ -350,6 +365,13 @@
             </div>
         </div>
     </div>
+    <!-- Overlay for Calculation -->
+    <div id="dist-overlay">
+        <h2 id="dist-status" style="font-family: 'Syne', sans-serif; color: var(--accent);">Инициализация ИИ...</h2>
+        <div class="dist-loader"><div class="dist-bar" id="dist-bar"></div></div>
+        <p id="dist-info" style="color: var(--muted); font-size: 0.9rem;">Анализ компетенций преподавателей...</p>
+    </div>
+
     <script>
         function toggleEdit(id) {
             const form = document.getElementById('edit-form-' + id);
@@ -358,6 +380,36 @@
             } else {
                 form.style.display = 'none';
             }
+        }
+
+        function startDistribution() {
+            const overlay = document.getElementById('dist-overlay');
+            const status = document.getElementById('dist-status');
+            const bar = document.getElementById('dist-bar');
+            const info = document.getElementById('dist-info');
+            
+            overlay.style.display = 'flex';
+            
+            const steps = [
+                { p: 20, s: "Анализ нагрузки...", i: "Сверка часов по учебному плану (6 дисциплин)" },
+                { p: 50, s: "Поиск ППС...", i: "Проверка квалификации для 'Алгоритмы' и 'AI'..." },
+                { p: 80, s: "Оптимизация...", i: "Минимизация превышения ставок (баланс 1.0 ст)" },
+                { p: 100, s: "Готово!", i: "Сохранение результатов в базу данных..." }
+            ];
+
+            let stepIdx = 0;
+            const interval = setInterval(() => {
+                if (stepIdx < steps.length) {
+                    const step = steps[stepIdx];
+                    bar.style.width = step.p + "%";
+                    status.innerText = step.s;
+                    info.innerText = step.i;
+                    stepIdx++;
+                } else {
+                    clearInterval(interval);
+                    window.location.href = "{% url 'run-distributor' %}";
+                }
+            }, 800);
         }
     </script>
 </body>
