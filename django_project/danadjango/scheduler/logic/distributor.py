@@ -31,26 +31,37 @@ class LoadDistributor:
             hours = c_profile.target_hours
             assigned = False
 
-            # Ищем подходящего преподавателя
-            # Сначала тех, у кого этот курс в специализации
-            potential_teachers = teachers.filter(scheduler_profile__specializations=course)
+            # Фильтруем подходящих преподавателей
+            potential_teachers = teachers.all()
             
-            if not potential_teachers.exists():
-                # Если нет узких специалистов, берем всех из его кафедры (если есть)
-                if course.teacher: # Если уже назначен статически в metapko
-                    potential_teachers = [course.teacher]
-                else:
-                    # Логируем конфликт: нет специалистов
-                    self.log_conflict('warning', f"Для курса '{course.title}' не найдено специалистов в TeacherProfile.")
-                    potential_teachers = teachers.all()
+            # Приоритезация по специализации
+            specialists = potential_teachers.filter(scheduler_profile__specializations=course)
+            if specialists.exists():
+                potential_teachers = specialists
+
+            # Сортировка по степени, если это лекция
+            if c_profile.course_type == CourseProfile.CourseType.LECTURE:
+                # Очередность: doctor, phd, candidate, master, none
+                degree_order = {'doctor': 0, 'phd': 1, 'candidate': 2, 'master': 3, 'none': 4}
+                potential_teachers = sorted(
+                    potential_teachers, 
+                    key=lambda t: degree_order.get(t.scheduler_profile.academic_degree, 5)
+                )
 
             for teacher in potential_teachers:
                 t_profile = teacher.scheduler_profile
                 
-                # Считаем текущую подтвержденную нагрузку + то что уже накидали в этом цикле
-                current_load = AssignmentResult.objects.filter(teacher=teacher).aggregate(total=Sum('course__scheduler_profile__target_hours'))['total'] or 0
+                # Считаем текущую нагрузку в часах в неделю (для сравнения с max_load_hours)
+                # Поскольку target_hours - это часы за семестр (обычно 16 недель), 
+                # мы делим на 16 для оценки недельной нагрузки, ИЛИ сравниваем напрямую если max_load_hours тоже за семестр.
+                # В нашей модели max_load_hours - это недельный лимит (20ч).
+                weekly_hours = hours / 16.0 
                 
-                if current_load + hours <= t_profile.max_load_hours:
+                # Считаем уже назначенную недельную нагрузку
+                results = AssignmentResult.objects.filter(teacher=teacher)
+                current_weekly_load = sum([r.course.scheduler_profile.target_hours / 16.0 for r in results if hasattr(r.course, 'scheduler_profile')])
+                
+                if current_weekly_load + weekly_hours <= t_profile.max_load_hours:
                     AssignmentResult.objects.create(
                         course=course,
                         teacher=teacher,
@@ -60,7 +71,7 @@ class LoadDistributor:
                     break
             
             if not assigned:
-                self.log_conflict('error', f"Не удалось распределить курс '{course.title}': все подходящие преподаватели перегружены.")
+                self.log_conflict('error', f"Не удалось распределить курс '{course.title}': нет свободных преподавателей с нужной квалификацией.")
 
         return self.conflicts
 

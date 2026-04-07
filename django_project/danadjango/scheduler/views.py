@@ -138,6 +138,43 @@ def manual_assign_course(request, teacher_id):
             messages.success(request, f'Курс "{course.title}" успешно назначен {teacher.full_name}.')
     return redirect('teacher-detail', teacher_id=teacher_id)
 
+from .logic.setup_expert import SetupExpert
+
+@login_required
+def run_setup_expert(request):
+    """Запуск эксперта по подготовке данных."""
+    stats = SetupExpert.fill_missing_profiles()
+    messages.success(request, f'Эксперт завершил работу. Создано профилей: Учителя ({stats["teachers"]}), Курсы ({stats["courses"]}), Группы ({stats["groups"]}).')
+    return redirect('load-dashboard')
+
+@login_required
+def create_teacher_manual(request):
+    """Ручное создание преподавателя и его профиля."""
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        position = request.POST.get('position', '')
+        degree = request.POST.get('degree', 'none')
+        rate = request.POST.get('rate', '1.0')
+        
+        if full_name:
+            # Создаем базового преподавателя в metapko
+            teacher = Teacher.objects.create(
+                full_name=full_name,
+                position=position,
+                is_active=True
+            )
+            # Создаем его профиль в scheduler
+            TeacherProfile.objects.create(
+                teacher=teacher,
+                academic_degree=degree,
+                employment_rate=float(rate)
+            )
+            messages.success(request, f'Преподаватель {full_name} успешно добавлен.')
+        else:
+            messages.error(request, 'ФИО обязательно для заполнения.')
+            
+    return redirect('load-dashboard')
+
 @login_required
 def remove_assignment(request, assignment_id):
     """Снятие дисциплины с преподавателя."""

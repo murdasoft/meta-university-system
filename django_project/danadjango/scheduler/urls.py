@@ -10,4 +10,6 @@ urlpatterns = [
     path('teacher/<int:teacher_id>/', views.teacher_detail, name='teacher-detail'),
     path('teacher/<int:teacher_id>/assign/', views.manual_assign_course, name='manual-assign-course'),
     path('assignment/<int:assignment_id>/remove/', views.remove_assignment, name='remove-assignment'),
+    path('run-setup-expert/', views.run_setup_expert, name='run-setup-expert'),
+    path('create-teacher-manual/', views.create_teacher_manual, name='create-teacher-manual'),
 ]
