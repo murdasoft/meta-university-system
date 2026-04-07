@@ -201,84 +201,69 @@
                         </div>
                     </div>
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Преподаватель</th>
-                                <th>Степень / Нагрузка</th>
-                                <th>Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for t in teachers %}
-                            <tr>
-                                <td>
-                                    <strong><a href="{% url 'teacher-detail' t.id %}" style="color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--accent);">{{ t.full_name }}</a></strong><br>
-                                    <small style="color: var(--muted)">{{ t.position }}</small>
-                                    
-                                <div style="margin-top: 10px;">
-                                    <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between;">
-                                        <span>Недельная нагрузка:</span>
-                                        <span style="font-weight: 600; color: white;">
-                                            {{ t.current_weekly_load|floatformat:1 }} / {{ t.scheduler_profile.max_load_hours|floatformat:1 }} ч.
-                                        </span>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">
+                        {% for t in teachers %}
+                        <div class="card" style="margin-bottom: 0; padding: 1.2rem; position: relative; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s, border-color 0.2s; background: rgba(18, 32, 48, 0.4);" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
+                            
+                            <!-- Кнопки управления (в углу) -->
+                            <div style="position: absolute; top: 1rem; right: 1rem; display: flex; gap: 5px;">
+                                <button onclick="toggleEdit('{{ t.id }}')" style="background: rgba(241, 196, 15, 0.15); border: 1px solid rgba(241, 196, 15, 0.3); color: #f1c40f; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">✏️</button>
+                                <a href="{% url 'delete-teacher' t.id %}" style="background: rgba(231, 76, 60, 0.15); border: 1px solid rgba(231, 76, 60, 0.3); color: #ff8a8a; padding: 5px 8px; border-radius: 6px; text-decoration: none; font-size: 0.8rem;" onclick="return confirm('Удалить?')">🗑️</a>
+                            </div>
+
+                            <div>
+                                <h3 style="font-size: 1.1rem; margin-bottom: 2px; padding-right: 60px;">
+                                    <a href="{% url 'teacher-detail' t.id %}" style="color: white; text-decoration: none;">{{ t.full_name }}</a>
+                                </h3>
+                                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+                                    <span style="font-size: 0.65rem; background: var(--bg1); padding: 2px 6px; border-radius: 4px; color: var(--accent); border: 1px solid var(--border);">
+                                        {{ t.scheduler_profile.get_academic_degree_display }}
+                                    </span>
+                                    <small style="color: var(--muted); font-size: 0.75rem;">{{ t.position|default:"Преподаватель" }}</small>
+                                </div>
+
+                                <!-- Нагрузка -->
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 6px;">
+                                        <span style="color: var(--muted);">Нагрузка в неделю:</span>
+                                        <span style="color: white; font-weight: 600;">{{ t.current_weekly_load|floatformat:1 }} / {{ t.scheduler_profile.max_load_hours|floatformat:0 }} ч.</span>
                                     </div>
-                                    <div style="height: 6px; background: var(--bg0); border-radius: 3px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                                        <div style="width: {{ t.load_percent }}%; height: 100%; background: linear-gradient(90deg, var(--accent), #5bc0de); transition: width 0.5s;"></div>
-                                    </div>
-                                    <div style="font-size: 0.65rem; color: var(--muted); margin-top: 4px; text-align: right;">
-                                        Загрузка: {{ t.load_percent }}%
+                                    <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden;">
+                                        <div style="width: {{ t.load_percent }}%; height: 100%; background: linear-gradient(90deg, var(--accent), #5bc0de); transition: width 0.6s;"></div>
                                     </div>
                                 </div>
-                                
-                                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
-                                    <p style="font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase;">Закреплено:</p>
-                                    <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                                        {% for course in t.courses.all %}
-                                            <span style="font-size: 0.7rem; background: rgba(78, 205, 196, 0.1); color: var(--accent); padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(78, 205, 196, 0.2);">
-                                                {{ course.title }}
-                                            </span>
-                                        {% empty %}
-                                            <span style="font-size: 0.7rem; color: var(--muted); font-style: italic;">Дисциплины не закреплены</span>
-                                        {% endfor %}
-                                    </div>
+
+                                <!-- Дисциплины -->
+                                <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                    {% for course in t.courses.all %}
+                                        <span style="font-size: 0.65rem; background: rgba(78, 205, 196, 0.05); color: var(--accent); padding: 2px 7px; border-radius: 4px; border: 1px solid rgba(78, 205, 196, 0.1);">
+                                            {{ course.title }}
+                                        </span>
+                                    {% empty %}
+                                        <span style="font-size: 0.7rem; color: var(--muted); font-style: italic;">Нет дисциплин</span>
+                                    {% endfor %}
                                 </div>
                             </div>
-                            <div style="display: flex; flex-direction: column; gap: 5px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px;">
-                                        <button onclick="toggleEdit('{{ t.id }}')" class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: var(--warning); color: black;">✏️</button>
-                                        <a href="{% url 'delete-teacher' t.id %}" class="btn btn--danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="return confirm('Удалить преподавателя?')">🗑️</a>
+
+                            <!-- Форма редактирования (всплывающая) -->
+                            <div id="edit-form-{{ t.id }}" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg1); border: 1px solid var(--accent); padding: 1rem; border-radius: 12px; z-index: 10;">
+                                <form action="{% url 'edit-teacher-manual' t.id %}" method="POST" style="display: flex; flex-direction: column; gap: 8px; height: 100%;">
+                                    {% csrf_token %}
+                                    <input type="text" name="full_name" value="{{ t.full_name }}" style="padding: 5px; background: #000; color: white; border: 1px solid var(--border); font-size: 0.8rem;">
+                                    <select name="degree" style="padding: 5px; background: #000; color: white; border: 1px solid var(--border); font-size: 0.8rem;">
+                                        <option value="none" {% if t.scheduler_profile.academic_degree == 'none' %}selected{% endif %}>Без степени</option>
+                                        <option value="phd" {% if t.scheduler_profile.academic_degree == 'phd' %}selected{% endif %}>PhD</option>
+                                        <option value="assoc_prof" {% if t.scheduler_profile.academic_degree == 'assoc_prof' %}selected{% endif %}>Асоц. профессор</option>
+                                    </select>
+                                    <div style="display: flex; gap: 5px; margin-top: auto;">
+                                        <button type="submit" class="btn" style="padding: 5px; flex: 1; font-size: 0.75rem;">Сохранить</button>
+                                        <button type="button" onclick="toggleEdit('{{ t.id }}')" class="btn btn--danger" style="padding: 5px; flex: 1; font-size: 0.75rem;">Х</button>
                                     </div>
-                                    <!-- Скрытая форма редактирования -->
-                                    <div id="edit-form-{{ t.id }}" style="display: none; position: absolute; background: var(--bg1); border: 1px solid var(--accent); padding: 1rem; border-radius: 8px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                                        <form action="{% url 'edit-teacher-manual' t.id %}" method="POST">
-                                            {% csrf_token %}
-                                            <input type="text" name="full_name" value="{{ t.full_name }}" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white; border: 1px solid var(--border);">
-                                            <input type="text" name="position" value="{{ t.position }}" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white; border: 1px solid var(--border);">
-                                            <select name="degree" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white;">
-                                                <option value="none" {% if t.scheduler_profile.academic_degree == 'none' %}selected{% endif %}>Без степени</option>
-                                                <option value="master" {% if t.scheduler_profile.academic_degree == 'master' %}selected{% endif %}>Магистр</option>
-                                                <option value="phd" {% if t.scheduler_profile.academic_degree == 'phd' %}selected{% endif %}>PhD</option>
-                                                <option value="assoc_prof" {% if t.scheduler_profile.academic_degree == 'assoc_prof' %}selected{% endif %}>Асоц. профессор</option>
-                                                <option value="professor" {% if t.scheduler_profile.academic_degree == 'professor' %}selected{% endif %}>Профессор</option>
-                                                <option value="research_prof" {% if t.scheduler_profile.academic_degree == 'research_prof' %}selected{% endif %}>Профессор-исследователь</option>
-                                            </select>
-                                            <select name="rate" style="width: 100%; margin-bottom: 0.5rem; background: #000; color: white;">
-                                                <option value="1.0" {% if t.scheduler_profile.employment_rate == 1.0 %}selected{% endif %}>1.0 ставка</option>
-                                                <option value="0.5" {% if t.scheduler_profile.employment_rate == 0.5 %}selected{% endif %}>0.5 ставки</option>
-                                                <option value="1.5" {% if t.scheduler_profile.employment_rate == 1.5 %}selected{% endif %}>1.5 ставки</option>
-                                                <option value="0.25" {% if t.scheduler_profile.employment_rate == 0.25 %}selected{% endif %}>0.25 ставки</option>
-                                            </select>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button type="submit" class="btn" style="flex: 1;">Сохранить</button>
-                                                <button type="button" onclick="toggleEdit('{{ t.id }}')" class="btn btn--danger" style="flex: 1;">Отмена</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <div class="card">
