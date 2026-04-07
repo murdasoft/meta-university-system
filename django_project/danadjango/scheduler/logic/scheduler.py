@@ -45,10 +45,12 @@ class ScheduleGenerator:
                 if sessions_created >= sessions_needed: break
                 
                 current_day = self.start_date + timedelta(days=day_offset)
+                day_sessions_for_this_course = 0 # Лимит на день
                 
                 # Перебор слотов
                 for slot_start, slot_end in self.slots:
                     if sessions_created >= sessions_needed: break
+                    if day_sessions_for_this_course >= 2: break # Не более 2-х пар одного предмета в день
                     
                     dt_start = timezone.make_aware(datetime.combine(current_day, slot_start))
                     dt_end = timezone.make_aware(datetime.combine(current_day, slot_end))
@@ -87,6 +89,7 @@ class ScheduleGenerator:
                             room=f"{suitable_room.name}"
                         )
                         sessions_created += 1
+                        day_sessions_for_this_course += 1
                     
             if sessions_created < sessions_needed:
                 ScheduleConflict.objects.create(

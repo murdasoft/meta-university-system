@@ -80,4 +80,14 @@ class SystemInitializer:
                 )
                 stats['courses'] += 1
                 
+        # 6. Авто-распределение для быстрого старта (Демо)
+        from scheduler.models import AssignmentResult
+        all_teachers_objs = list(Teacher.objects.all())
+        all_courses_objs = list(Course.objects.all())
+        
+        if all_teachers_objs and all_courses_objs:
+            for i, course in enumerate(all_courses_objs):
+                teacher = all_teachers_objs[i % len(all_teachers_objs)]
+                AssignmentResult.objects.get_or_create(course=course, teacher=teacher)
+
         return stats
